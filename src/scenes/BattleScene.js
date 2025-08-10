@@ -29,7 +29,8 @@ export class BattleScene extends Phaser.Scene {
         this.enemyTeam[2] = { id: 'bossMeat', name: 'Кровавый фарш', hp: 16000, atk: 350, atkSpeed: 1, currentHp: 16000, isAlive: true, spriteKey: 'boss-meat', isBoss: true };
       }
     }
-    try { console.log(`${this._logPrefix || `[I${this.island}L${this.level}]`} Enemy team:`, this.enemyTeam.map(e=>e?.id||null)); } catch(e) {}
+    // Debug: enemy team ids
+    // try { console.log(`${this._logPrefix || `[I${this.island}L${this.level}]`} Enemy team:`, this.enemyTeam.map(e=>e?.id||null)); } catch(e) {}
 
     // Layout slots
     const leftX = width * 0.25; const rightX = width * 0.75; const topY = 100; const gapY = 70;
@@ -107,7 +108,7 @@ export class BattleScene extends Phaser.Scene {
     this._activeEnemySunSprite = null;
     this._logPrefix = `[I${this.island}L${this.level}]`;
          this._setupAttackLoops();
-     console.log(this._logPrefix, 'Ready.');
+    // console.debug(this._logPrefix, 'Ready.');
 
     // After 1 second, transform imitators into copies of opposing player unit in the same row
     this.time.delayedCall(1000, () => this._transformImitators());
@@ -128,13 +129,13 @@ export class BattleScene extends Phaser.Scene {
 
   _handleEnemyDeathAtIndex(index, unit) {
     // Logging
-    console.log(`${this._logPrefix} Enemy died at line ${index+1}:`, unit?.id);
+    // console.debug(`${this._logPrefix} Enemy died at line ${index+1}:`, unit?.id);
     if (!unit) return;
     // Free the slot for potential spawns
     this.enemyTeam[index] = null;
     // Island 3 L10 boss death => spawn 3 zombies at lines 2,3,4
     if (this.island === 3 && this.level === 10 && unit.id === 'bossMeat') {
-      console.log(`${this._logPrefix} BossMeat dead -> spawning zombies on lines 2,3,4`);
+      // console.debug(`${this._logPrefix} BossMeat dead -> spawning zombies on lines 2,3,4`);
       const slots = [1,2,3];
       for (const slot of slots) {
         if (!this.enemyTeam[slot]) {
@@ -142,7 +143,7 @@ export class BattleScene extends Phaser.Scene {
           const z = { id: `zombieStick_${Date.now()%100000}_${slot}`,
             name: 'Зомби', hp: 3500, atk: 200, atkSpeed: 2, currentHp: 3500, isAlive: true, spriteKey: colorKey };
           this._spawnEnemyUnitAt(slot, z, { size: 56, hpColor: 0xff5a5a, jitter: true });
-          console.log(`${this._logPrefix} Spawned zombie at line ${slot+1}`);
+          // console.debug(`${this._logPrefix} Spawned zombie at line ${slot+1}`);
         }
       }
     }
@@ -152,7 +153,7 @@ export class BattleScene extends Phaser.Scene {
       if (!this.enemyTeam[slot]) {
         const r = { id: `remnant_${Date.now()%100000}_${slot}`, name: 'Остаток', hp: 2000, atk: 100, atkSpeed: 2, currentHp: 2000, isAlive: true, spriteKey: 'remnant-red' };
         this._spawnEnemyUnitAt(slot, r, { size: 44, hpColor: 0xff3a3a, jitter: true });
-        console.log(`${this._logPrefix} Spawned remnant at line ${slot+1}`);
+        // console.debug(`${this._logPrefix} Spawned remnant at line ${slot+1}`);
       }
     }
   }
@@ -299,7 +300,7 @@ export class BattleScene extends Phaser.Scene {
           target.isAlive = false; target.currentHp = 0;
           const sprite = sprites[targetIndex];
           if (sprite) this.tweens.add({ targets: sprite, alpha: 0, scale: 0.7, duration: 220, ease: 'Sine.easeIn', onComplete: () => sprite.setVisible(false) });
-          hpBars[targetIndex].set(0);
+          if (hpBars[targetIndex]?.set) hpBars[targetIndex].set(0);
           if (isPlayer) { this.killedEnemies++; this._maybeBonusStone(); }
           if (isPlayer) this._handleEnemyDeathAtIndex(targetIndex, target);
           const still = opp.some(u => u && u.isAlive);

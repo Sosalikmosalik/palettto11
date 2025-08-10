@@ -34,6 +34,11 @@ export class PreloadScene extends Phaser.Scene {
     this.load.image('boss-beach', 'assets/sprites/characters/boss-beach.svg');
     this.load.image('boss-cloud', 'assets/sprites/characters/boss-cloud.svg');
     this.load.image('stickman-blue', 'assets/sprites/characters/stickman-blue.svg');
+    // New enemies for Island 3
+    this.load.image('boss-meat', 'assets/sprites/characters/boss-meat.svg');
+    this.load.image('zombie-stickman-red', 'assets/sprites/characters/zombie-stickman-red.svg');
+    this.load.image('zombie-stickman-green', 'assets/sprites/characters/zombie-stickman-green.svg');
+    this.load.image('remnant-red', 'assets/sprites/characters/remnant-red.svg');
     // Island backgrounds and icons
     this.load.image('bg-jungle', 'assets/backgrounds/bg-jungle.svg');
     this.load.image('bg-beach', 'assets/backgrounds/bg-beach.svg');

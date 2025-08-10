@@ -62,11 +62,19 @@ export class BattleScene extends Phaser.Scene {
         if (e.id === 'bossCloud' || e.id?.startsWith('summonedBlue')) {
           this.tweens.add({ targets: s2, y: { from: y - 4, to: y + 4 }, duration: 1500, yoyo: true, repeat: -1, ease: 'Sine.easeInOut' });
         }
-        // Imitator wobble animation (chaotic)
-        if (e.isImitator) {
-          this.tweens.add({ targets: s2, angle: { from: -6, to: 6 }, duration: 300, yoyo: true, repeat: -1, ease: 'Sine.easeInOut' });
-          this.tweens.add({ targets: s2, x: { from: rightX - 4, to: rightX + 4 }, duration: 260, yoyo: true, repeat: -1, ease: 'Sine.easeInOut' });
-        }
+                // Imitator wobble animation (chaotic)
+         if (e.isImitator) {
+           this.tweens.add({ targets: s2, angle: { from: -6, to: 6 }, duration: 300, yoyo: true, repeat: -1, ease: 'Sine.easeInOut' });
+           this.tweens.add({ targets: s2, x: { from: rightX - 4, to: rightX + 4 }, duration: 260, yoyo: true, repeat: -1, ease: 'Sine.easeInOut' });
+         }
+         // Meat boss: add subtle unsettling jitter
+         if (e.id === 'bossMeat') {
+           this._applyJitter(s2, { angle: 12, y: 3, scale: 0.03 });
+         }
+         // Zombies: jittery weird motion
+         if (e.id && String(e.id).startsWith('zombieStick_')) {
+           this._applyJitter(s2);
+         }
         // Imitator Bastin: 3s invulnerability with white shield visual
         if (e.originalId === 'bastin') {
           e.invulnUntil = this.time.now + 3000;
@@ -86,10 +94,70 @@ export class BattleScene extends Phaser.Scene {
     this._imitatorAnubisBuffTimer = null;
     this._activeSunSprite = null;
     this._activeEnemySunSprite = null;
+    this._logPrefix = `[I${this.island}L${this.level}]`;
     this._setupAttackLoops();
 
     // After 1 second, transform imitators into copies of opposing player unit in the same row
     this.time.delayedCall(1000, () => this._transformImitators());
+  }
+
+  _applyJitter(sprite, opts = {}) {
+    if (!sprite) return;
+    const angleAmp = opts.angle ?? Phaser.Math.Between(10, 30);
+    const yAmp = opts.y ?? Phaser.Math.Between(2, 8);
+    const scaleAmp = opts.scale ?? 0.05;
+    const durationA = Phaser.Math.Between(200, 500);
+    const durationY = Phaser.Math.Between(260, 600);
+    const durationS = Phaser.Math.Between(240, 520);
+    this.tweens.add({ targets: sprite, angle: { from: -angleAmp, to: angleAmp }, duration: durationA, yoyo: true, repeat: -1, ease: 'Sine.easeInOut', delay: Phaser.Math.Between(0, 250) });
+    this.tweens.add({ targets: sprite, y: { from: sprite.y - yAmp, to: sprite.y + yAmp }, duration: durationY, yoyo: true, repeat: -1, ease: 'Sine.easeInOut', delay: Phaser.Math.Between(0, 250) });
+    this.tweens.add({ targets: sprite, scaleX: { from: sprite.scaleX * (1 - scaleAmp), to: sprite.scaleX * (1 + scaleAmp) }, scaleY: { from: sprite.scaleY * (1 + scaleAmp), to: sprite.scaleY * (1 - scaleAmp) }, duration: durationS, yoyo: true, repeat: -1, ease: 'Sine.easeInOut', delay: Phaser.Math.Between(0, 250) });
+  }
+
+  _handleEnemyDeathAtIndex(index, unit) {
+    // Logging
+    console.log(`${this._logPrefix} Enemy died at line ${index+1}:`, unit?.id);
+    if (!unit) return;
+    // Free the slot for potential spawns
+    this.enemyTeam[index] = null;
+    // Island 3 L10 boss death => spawn 3 zombies at lines 2,3,4
+    if (this.island === 3 && this.level === 10 && unit.id === 'bossMeat') {
+      console.log(`${this._logPrefix} BossMeat dead -> spawning zombies on lines 2,3,4`);
+      const slots = [1,2,3];
+      for (const slot of slots) {
+        if (!this.enemyTeam[slot]) {
+          const colorKey = Math.random() < 0.5 ? 'zombie-stickman-red' : 'zombie-stickman-green';
+          const z = { id: `zombieStick_${Date.now()%100000}_${slot}`,
+            name: 'Зомби', hp: 3500, atk: 200, atkSpeed: 2, currentHp: 3500, isAlive: true, spriteKey: colorKey };
+          this._spawnEnemyUnitAt(slot, z, { size: 56, hpColor: 0xff5a5a, jitter: true });
+          console.log(`${this._logPrefix} Spawned zombie at line ${slot+1}`);
+        }
+      }
+    }
+    // Zombie death => spawn 1 red remnant at the same slot
+    if (unit.id && String(unit.id).startsWith('zombieStick_')) {
+      const slot = index;
+      if (!this.enemyTeam[slot]) {
+        const r = { id: `remnant_${Date.now()%100000}_${slot}`, name: 'Остаток', hp: 2000, atk: 100, atkSpeed: 2, currentHp: 2000, isAlive: true, spriteKey: 'remnant-red' };
+        this._spawnEnemyUnitAt(slot, r, { size: 44, hpColor: 0xff3a3a, jitter: true });
+        console.log(`${this._logPrefix} Spawned remnant at line ${slot+1}`);
+      }
+    }
+  }
+
+  _spawnEnemyUnitAt(slot, unit, options = {}) {
+    const { width } = this.scale; const rightX = width * 0.75; const topY = 100; const gapY = 70; const y = topY + slot * gapY;
+    this.enemyTeam[slot] = unit;
+    const size = options.size || 56;
+    const s2 = this.add.image(rightX, y, unit.spriteKey).setDisplaySize(size, size).setAlpha(0);
+    this.tweens.add({ targets: s2, alpha: 1, duration: 250 });
+    this.enemySprites[slot] = s2;
+    const hpColor = options.hpColor || 0xff5a5a;
+    const hp2 = drawHpBar(this, rightX - 80, y - 40, 120, 10, hpColor, 1);
+    this.enemyHpBars[slot] = hp2;
+    if (options.jitter) this._applyJitter(s2);
+    // start its attack loop
+    this._createAttacker(false, slot);
   }
 
   _transformImitators() {
@@ -186,7 +254,9 @@ export class BattleScene extends Phaser.Scene {
         hpBars[targetIndex].set(0);
         // Bonus stones 50% only when player kills an enemy
         if (isPlayer) { this.killedEnemies++; this._maybeBonusStone(); }
-        // check wipe
+        // Handle death hooks
+        if (isPlayer) this._handleEnemyDeathAtIndex(targetIndex, target);
+        // check wipe (recompute after potential spawns)
         const still = opp.some(u => u && u.isAlive);
         if (!still) { this._onTeamWiped(isPlayer ? 'enemy' : 'player'); return; }
       } else {
@@ -219,6 +289,7 @@ export class BattleScene extends Phaser.Scene {
           if (sprite) this.tweens.add({ targets: sprite, alpha: 0, scale: 0.7, duration: 220, ease: 'Sine.easeIn', onComplete: () => sprite.setVisible(false) });
           hpBars[targetIndex].set(0);
           if (isPlayer) { this.killedEnemies++; this._maybeBonusStone(); }
+          if (isPlayer) this._handleEnemyDeathAtIndex(targetIndex, target);
           const still = opp.some(u => u && u.isAlive);
           if (!still) { this._onTeamWiped(isPlayer ? 'enemy' : 'player'); return; }
         } else {
@@ -260,6 +331,7 @@ export class BattleScene extends Phaser.Scene {
             if (sprite) this.tweens.add({ targets: sprite, alpha: 0, scale: 0.7, duration: 220, ease: 'Sine.easeIn', onComplete: () => sprite.setVisible(false) });
             hpBars[targetIndex].set(0);
             if (isPlayer) { this.killedEnemies++; this._maybeBonusStone(); }
+            if (isPlayer) this._handleEnemyDeathAtIndex(targetIndex, target);
             const still = opp.some(u => u && u.isAlive);
             if (!still) { this._onTeamWiped(isPlayer ? 'enemy' : 'player'); return; }
           } else {
@@ -292,6 +364,7 @@ export class BattleScene extends Phaser.Scene {
             if (sprite) this.tweens.add({ targets: sprite, alpha: 0, scale: 0.7, duration: 220, ease: 'Sine.easeIn', onComplete: () => sprite.setVisible(false) });
             hpBars[j].set(0);
             if (isPlayer) { this.killedEnemies++; this._maybeBonusStone(); }
+            if (isPlayer) this._handleEnemyDeathAtIndex(j, target);
           } else {
             const hp01 = target.currentHp / target.hp;
             hpBars[j].set(hp01);
@@ -533,6 +606,7 @@ export class BattleScene extends Phaser.Scene {
         const sprite = sprites[targetIdx];
         if (sprite) this.tweens.add({ targets: sprite, alpha: 0, scale: 0.7, duration: 220, ease: 'Sine.easeIn', onComplete: () => sprite.setVisible(false) });
         hpBars[targetIdx].set(0);
+        // Enemy killed a player — still call generic hook for parity (no special behavior)
       } else {
         const hp01 = target.currentHp / target.hp;
         hpBars[targetIdx].set(hp01);

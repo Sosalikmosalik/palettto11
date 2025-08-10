@@ -1,0 +1,16 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="128" height="128" viewBox="0 0 128 128">
+  <defs>
+    <radialGradient id="cloud" cx="0.5" cy="0.5" r="0.6">
+      <stop offset="0" stop-color="#e3f2fd"/>
+      <stop offset="1" stop-color="#90caf9"/>
+    </radialGradient>
+  </defs>
+  <g>
+    <ellipse cx="64" cy="70" rx="44" ry="30" fill="url(#cloud)"/>
+    <ellipse cx="40" cy="62" rx="20" ry="16" fill="#bbdefb"/>
+    <ellipse cx="88" cy="62" rx="20" ry="16" fill="#bbdefb"/>
+    <circle cx="52" cy="68" r="5" fill="#1565c0"/>
+    <circle cx="76" cy="68" r="5" fill="#1565c0"/>
+  </g>
+</svg>
+

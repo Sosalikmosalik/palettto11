@@ -87,6 +87,9 @@ export function buildTeamFromSelection(state, selectedIdsWithInstance) {
   });
 }
 
+// Tuning: chance for zombie presence on Island 3, levels 1-9
+export const ISLAND3_ZOMBIE_BASE_CHANCE = 0.2; // per level
+
 export function generateMonsterTeam(island, level) {
   const s = getMonsterStats(island, level);
   const team = [];
@@ -105,6 +108,11 @@ export function generateMonsterTeam(island, level) {
     for (let i = 0; i < 5; i++) team[i] = null;
     team[2] = { id: 'bossBeach', name: 'Пляжный босс', hp: 12000, atk: 250, atkSpeed: 1, currentHp: 12000, isAlive: true, spriteKey: 'boss-beach', isBoss: true };
   }
+  // Special boss: Island 3, Level 10 — single meat boss at third position, triggers zombie phases on death
+  if (island === 3 && level === 10) {
+    for (let i = 0; i < 5; i++) team[i] = null;
+    team[2] = { id: 'bossMeat', name: 'Кровавый фарш', hp: 16000, atk: 350, atkSpeed: 1, currentHp: 16000, isAlive: true, spriteKey: 'boss-meat', isBoss: true };
+  }
   // Special boss: Island 4, Level 10 — single cloud boss at third position
   if (island === 4 && level === 10) {
     for (let i = 0; i < 5; i++) team[i] = null;
@@ -115,6 +123,24 @@ export function generateMonsterTeam(island, level) {
     const idx = Math.floor(Math.random() * 5);
     const base = team[idx];
     team[idx] = { id: 'imitator', name: 'Имитатор', hp: base.hp, atk: base.atk, atkSpeed: base.atkSpeed, currentHp: base.hp, isAlive: true, spriteKey: 'imitator', isImitator: true };
+  }
+  // Zombies: Island 3 Levels 1-9 — parameterized random presence
+  if (island === 3 && level >= 1 && level <= 9) {
+    const chance = ISLAND3_ZOMBIE_BASE_CHANCE; // can be tuned from game settings later
+    // With chance, replace middle-top line 2 (index 1) with a zombie
+    if (Math.random() < chance) {
+      const colorKey = Math.random() < 0.5 ? 'zombie-stickman-red' : 'zombie-stickman-green';
+      team[1] = { id: `zombieStick_${Math.floor(Math.random()*100000)}`, name: 'Зомби', hp: 3500, atk: 200, atkSpeed: 2, currentHp: 3500, isAlive: true, spriteKey: colorKey };
+    }
+    // Additionally, up to 3 zombies may replace random positions of normal monsters
+    const positions = [0,2,3,4];
+    for (let i = 0; i < 3; i++) {
+      if (Math.random() < chance) {
+        const idx = positions[Math.floor(Math.random() * positions.length)];
+        const colorKey = Math.random() < 0.5 ? 'zombie-stickman-red' : 'zombie-stickman-green';
+        team[idx] = { id: `zombieStick_${Math.floor(Math.random()*100000)}`, name: 'Зомби', hp: 3500, atk: 200, atkSpeed: 2, currentHp: 3500, isAlive: true, spriteKey: colorKey };
+      }
+    }
   }
   return team;
 }

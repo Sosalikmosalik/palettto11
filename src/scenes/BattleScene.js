@@ -3,7 +3,7 @@ import { music } from '../music.js';
 
 export class BattleScene extends Phaser.Scene {
   constructor() { super('Battle'); }
-  init(data) { this.island = data.island; this.level = data.level; this.teamIds = data.team; this.replay = !!data.replay; }
+     init(data) { this.island = data.island; this.level = data.level; this.teamIds = data.team; this.replay = !!data.replay; this._prebuiltEnemyTeam = data.enemyTeam || null; }
 
   create() {
     this.ended = false;
@@ -18,7 +18,7 @@ export class BattleScene extends Phaser.Scene {
     // Build teams
     this.playerTeam = buildTeamFromSelection(window.PathHeroesState, this.teamIds);
     while (this.playerTeam.length < 5) this.playerTeam.push(null); // empty slots
-    this.enemyTeam = generateMonsterTeam(this.island, this.level);
+         this.enemyTeam = this._prebuiltEnemyTeam ? JSON.parse(JSON.stringify(this._prebuiltEnemyTeam)) : generateMonsterTeam(this.island, this.level);
     // Safety: ensure boss-only layout for specific boss levels
     if (this.island === 3 && this.level === 10) {
       for (let i = 0; i < 5; i++) if (i !== 2) this.enemyTeam[i] = null;

@@ -8,6 +8,9 @@ export class State {
       version: 1,
       scrolls: 0,
       lifeStones: 0,
+      starScrolls: 0,
+      donation: { progress: 0, total: 0 },
+      achievements: { monstersKilled: 0, scrollsSpent: 0, series1_stage: 1, series2_stage: 1, series3_stage: 1 },
       soundOn: true,
       graphicsQuality: 'high', // low|medium|high
       // owned: per character id -> array of instances, each { upgrade: number }
@@ -28,6 +31,9 @@ export class State {
   _normalize() {
     if (!this.data.completed) this.data.completed = this._makeCompleted();
     if (!this.data.owned) this.data.owned = {};
+    if (!this.data.donation) this.data.donation = { progress: 0, total: 0 };
+    if (typeof this.data.starScrolls !== 'number') this.data.starScrolls = 0;
+    if (!this.data.achievements) this.data.achievements = { monstersKilled: 0, scrollsSpent: 0, series1_stage: 1, series2_stage: 1, series3_stage: 1 };
     // migrate legacy owned structure { count, upgrade } to array instances
     Object.keys(this.data.owned).forEach((id) => {
       const entry = this.data.owned[id];
@@ -81,9 +87,23 @@ export class State {
     this._save();
   }
 
+  addStarScrolls(amount) {
+    this.data.starScrolls = clamp((this.data.starScrolls || 0) + (amount|0), 0, 999999);
+    this._save();
+  }
+
+  useStarScroll() {
+    if ((this.data.starScrolls || 0) <= 0) return false;
+    this.data.starScrolls -= 1;
+    this._save();
+    return true;
+  }
+
   useScroll() {
     if (this.data.scrolls <= 0) return false;
     this.data.scrolls -= 1;
+    // achievements: track scrolls spent
+    this.data.achievements.scrollsSpent = (this.data.achievements.scrollsSpent || 0) + 1;
     this._save();
     return true;
   }
@@ -133,6 +153,25 @@ export class State {
   getCharacterDisplayStatsForUpgrade(charId, upgrade) {
     const base = CHARACTERS[charId];
     return { hp: base.hp + 50 * upgrade, atk: base.atk + 5 * upgrade, atkSpeed: base.atkSpeed };
+  }
+
+  // Donations: spend 1 life stone; progress increases; every 5th donation gives a reward
+  donateOneStone() {
+    if ((this.data.lifeStones || 0) <= 0) return { ok: false };
+    this.data.lifeStones -= 1;
+    this.data.donation.progress = (this.data.donation.progress || 0) + 1;
+    this.data.donation.total = (this.data.donation.total || 0) + 1;
+    this._save();
+    let reward = null;
+    if (this.data.donation.progress % 5 === 0) {
+      // cycle rewards: scroll, starScroll, character (common pool), then repeat
+      const step = (this.data.donation.total / 5) | 0;
+      const mod = step % 3;
+      if (mod === 0) reward = { type: 'scroll', value: 3 };
+      if (mod === 1) reward = { type: 'starScroll', value: 1 };
+      if (mod === 2) reward = { type: 'character', value: 'executioner' };
+    }
+    return { ok: true, reward };
   }
 
   exportToFile() {

@@ -136,6 +136,17 @@ export class BattleScene extends Phaser.Scene {
     this.tweens.add({ targets: sprite, scaleX: { from: sprite.scaleX * (1 - scaleAmp), to: sprite.scaleX * (1 + scaleAmp) }, scaleY: { from: sprite.scaleY * (1 + scaleAmp), to: sprite.scaleY * (1 - scaleAmp) }, duration: durationS, yoyo: true, repeat: -1, ease: 'Sine.easeInOut', delay: Phaser.Math.Between(0, 250) });
   }
 
+  _incMonstersKilledSafe(isPlayerKill) {
+    if (!isPlayerKill) return;
+    try {
+      if (!window.PathHeroesState) window.PathHeroesState = { data: { achievements: { monstersKilled: 0, scrollsSpent: 0, series1_stage: 1, series2_stage: 1, series3_stage: 1 } } };
+      if (!window.PathHeroesState.data) window.PathHeroesState.data = {};
+      if (!window.PathHeroesState.data.achievements) window.PathHeroesState.data.achievements = { monstersKilled: 0, scrollsSpent: 0, series1_stage: 1, series2_stage: 1, series3_stage: 1 };
+      const a = window.PathHeroesState.data.achievements;
+      a.monstersKilled = (a.monstersKilled || 0) + 1;
+    } catch (e) { /* ignore */ }
+  }
+
   _handleEnemyDeathAtIndex(index, unit) {
     // Logging
     // console.debug(`${this._logPrefix} Enemy died at line ${index+1}:`, unit?.id);
@@ -272,7 +283,7 @@ export class BattleScene extends Phaser.Scene {
         const sprite = sprites[targetIndex];
         if (sprite) this.tweens.add({ targets: sprite, alpha: 0, scale: 0.7, duration: 220, ease: 'Sine.easeIn', onComplete: () => sprite.setVisible(false) });
                  // achievements: monsters killed +1 for player kills
-         try { if (isPlayer) window.PathHeroesState.data.achievements.monstersKilled = (window.PathHeroesState.data.achievements.monstersKilled || 0) + 1; } catch(e) {}
+         this._incMonstersKilledSafe(isPlayer);
          if (hpBars[targetIndex]?.set) hpBars[targetIndex].set(0);
         // Bonus stones 50% only when player kills an enemy
         if (isPlayer) { this.killedEnemies++; this._maybeBonusStone(); }

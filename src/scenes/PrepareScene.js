@@ -13,6 +13,7 @@ export class PrepareScene extends Phaser.Scene {
   _playEnemyIntro() {
     const { width, height } = this.scale;
     const enemies = generateMonsterTeam(this.island, this.level);
+    console.log(`[I${this.island}L${this.level}] Enemy preview:`, enemies);
     const c = this.add.container(0, 0);
     const banner = this.add.text(width/2, 90, 'Предстоящие враги', { fontSize: 22, color: '#ffd54f' }).setOrigin(0.5);
     c.add(banner);

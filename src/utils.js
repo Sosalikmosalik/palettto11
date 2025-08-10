@@ -124,23 +124,16 @@ export function generateMonsterTeam(island, level) {
     const base = team[idx];
     team[idx] = { id: 'imitator', name: 'Имитатор', hp: base.hp, atk: base.atk, atkSpeed: base.atkSpeed, currentHp: base.hp, isAlive: true, spriteKey: 'imitator', isImitator: true };
   }
-  // Zombies: Island 3 Levels 1-9 — parameterized random presence
+  // Zombies: Island 3 Levels 1-9 — guarantee exactly 2 zombies per wave
   if (island === 3 && level >= 1 && level <= 9) {
-    const chance = ISLAND3_ZOMBIE_BASE_CHANCE; // can be tuned from game settings later
-    // With chance, replace middle-top line 2 (index 1) with a zombie
-    if (Math.random() < chance) {
-      const colorKey = Math.random() < 0.5 ? 'zombie-stickman-red' : 'zombie-stickman-green';
-      team[1] = { id: `zombieStick_${Math.floor(Math.random()*100000)}`, name: 'Зомби', hp: 3500, atk: 200, atkSpeed: 2, currentHp: 3500, isAlive: true, spriteKey: colorKey };
-    }
-    // Additionally, up to 3 zombies may replace random positions of normal monsters
+    // Always place one on line 2 (index 1)
+    const z1Key = Math.random() < 0.5 ? 'zombie-stickman-red' : 'zombie-stickman-green';
+    team[1] = { id: `zombieStick_${Math.floor(Math.random()*100000)}`, name: 'Зомби', hp: 3500, atk: 200, atkSpeed: 2, currentHp: 3500, isAlive: true, spriteKey: z1Key };
+    // And one more on a random other line
     const positions = [0,2,3,4];
-    for (let i = 0; i < 3; i++) {
-      if (Math.random() < chance) {
-        const idx = positions[Math.floor(Math.random() * positions.length)];
-        const colorKey = Math.random() < 0.5 ? 'zombie-stickman-red' : 'zombie-stickman-green';
-        team[idx] = { id: `zombieStick_${Math.floor(Math.random()*100000)}`, name: 'Зомби', hp: 3500, atk: 200, atkSpeed: 2, currentHp: 3500, isAlive: true, spriteKey: colorKey };
-      }
-    }
+    const idx = positions[Math.floor(Math.random() * positions.length)];
+    const z2Key = Math.random() < 0.5 ? 'zombie-stickman-red' : 'zombie-stickman-green';
+    team[idx] = { id: `zombieStick_${Math.floor(Math.random()*100000)}`, name: 'Зомби', hp: 3500, atk: 200, atkSpeed: 2, currentHp: 3500, isAlive: true, spriteKey: z2Key };
   }
   return team;
 }

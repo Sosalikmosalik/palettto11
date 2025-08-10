@@ -19,6 +19,14 @@ export class BattleScene extends Phaser.Scene {
     this.playerTeam = buildTeamFromSelection(window.PathHeroesState, this.teamIds);
     while (this.playerTeam.length < 5) this.playerTeam.push(null); // empty slots
     this.enemyTeam = generateMonsterTeam(this.island, this.level);
+    // Safety: ensure boss-only layout for specific boss levels
+    if (this.island === 3 && this.level === 10) {
+      for (let i = 0; i < 5; i++) if (i !== 2) this.enemyTeam[i] = null;
+      if (!this.enemyTeam[2] || this.enemyTeam[2].id !== 'bossMeat') {
+        this.enemyTeam[2] = { id: 'bossMeat', name: 'Кровавый фарш', hp: 16000, atk: 350, atkSpeed: 1, currentHp: 16000, isAlive: true, spriteKey: 'boss-meat', isBoss: true };
+      }
+    }
+    console.log(`${this._logPrefix || `[I${this.island}L${this.level}]`} Enemy team:`, this.enemyTeam);
 
     // Layout slots
     const leftX = width * 0.25; const rightX = width * 0.75; const topY = 100; const gapY = 70;

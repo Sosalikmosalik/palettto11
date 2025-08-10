@@ -14,10 +14,16 @@ export class State {
       soundOn: true,
       graphicsQuality: 'high', // low|medium|high
       // owned: per character id -> array of instances, each { upgrade: number }
-      owned: { executioner: [ { upgrade: 0 } ] }, // starter hero so the very first level is playable
+      owned: { executioner: [ { upgrade: 0 }, { upgrade: 0 }, { upgrade: 0 } ] }, // 3 стартовых Палача
       completed: this._makeCompleted(), // islandIndex -> bool[10]
     };
-    this.data = this._load() || cloneDeep(this._default);
+    const loaded = this._load();
+    // If no save or legacy with <3 executioners, bump to 3 starters
+    if (!loaded || !Array.isArray(loaded?.owned?.executioner) || loaded.owned.executioner.length < 3) {
+      this.data = cloneDeep(this._default);
+    } else {
+      this.data = loaded;
+    }
     this._normalize();
     this._save();
   }

@@ -70,6 +70,8 @@ export class PreloadScene extends Phaser.Scene {
     this.load.image('ach-3-5', 'assets/icons/ach-3-5.svg');
   }
   create() {
+    // Version watermark
+    try { this.add.text(10, this.scale.height - 16, 'v20250810', { fontSize: 12, color: '#7a8fa8' }).setOrigin(0,1); } catch(e) {}
     this.scene.start('MainMenu');
   }
 }

@@ -1,16 +1,16 @@
-import { BootScene } from './scenes/BootScene.js';
-import { PreloadScene } from './scenes/PreloadScene.js';
-import { MainMenuScene } from './scenes/MainMenuScene.js';
-import { MapScene } from './scenes/MapScene.js';
-import { SummonScene } from './scenes/SummonScene.js';
-import { InventoryScene } from './scenes/InventoryScene.js';
-import { SettingsScene } from './scenes/SettingsScene.js';
-import { DonationScene } from './scenes/DonationScene.js';
-import { AchievementsScene } from './scenes/AchievementsScene.js';
-import { PrepareScene } from './scenes/PrepareScene.js';
-import { BattleScene } from './scenes/BattleScene.js';
-import { StarSummonScene } from './scenes/StarSummonScene.js';
-import { State } from './state.js';
+import { BootScene } from './scenes/BootScene.js?v=20250810';
+import { PreloadScene } from './scenes/PreloadScene.js?v=20250810';
+import { MainMenuScene } from './scenes/MainMenuScene.js?v=20250810';
+import { MapScene } from './scenes/MapScene.js?v=20250810';
+import { SummonScene } from './scenes/SummonScene.js?v=20250810';
+import { InventoryScene } from './scenes/InventoryScene.js?v=20250810';
+import { SettingsScene } from './scenes/SettingsScene.js?v=20250810';
+import { DonationScene } from './scenes/DonationScene.js?v=20250810';
+import { AchievementsScene } from './scenes/AchievementsScene.js?v=20250810';
+import { PrepareScene } from './scenes/PrepareScene.js?v=20250810';
+import { BattleScene } from './scenes/BattleScene.js?v=20250810';
+import { StarSummonScene } from './scenes/StarSummonScene.js?v=20250810';
+import { State } from './state.js?v=20250810';
 
 // Global single state instance (autosaves internally)
 window.PathHeroesState = new State();

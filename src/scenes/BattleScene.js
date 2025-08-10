@@ -9,6 +9,15 @@ export class BattleScene extends Phaser.Scene {
     this.ended = false;
     const { width, height } = this.scale;
     music.stop();
+    // Ensure achievements container exists to avoid undefined errors in kill handlers
+    try {
+      if (window.PathHeroesState) {
+        if (!window.PathHeroesState.data) window.PathHeroesState.data = {};
+        if (!window.PathHeroesState.data.achievements) {
+          window.PathHeroesState.data.achievements = { monstersKilled: 0, scrollsSpent: 0, series1_stage: 1, series2_stage: 1, series3_stage: 1 };
+        }
+      }
+    } catch (e) {}
     // background by island
     const bgKey = ['bg-jungle','bg-beach','bg-village','bg-fog','bg-desert'][Math.max(0, Math.min(4, (this.island|0) - 1))];
     if (bgKey) this.add.image(width/2, height/2, bgKey).setDisplaySize(width, height);

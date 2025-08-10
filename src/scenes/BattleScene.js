@@ -12,7 +12,10 @@ export class BattleScene extends Phaser.Scene {
     // background by island
     const bgKey = ['bg-jungle','bg-beach','bg-village','bg-fog','bg-desert'][Math.max(0, Math.min(4, (this.island|0) - 1))];
     if (bgKey) this.add.image(width/2, height/2, bgKey).setDisplaySize(width, height);
-    this.add.text(24, 20, `Бой — Остров ${this.island}, Уровень ${this.level}`, { fontSize: 22, color: '#e9f1ff' });
+         this.add.text(24, 20, `Бой — Остров ${this.island}, Уровень ${this.level}`, { fontSize: 22, color: '#e9f1ff' });
+     // Debug overlay of enemy IDs
+     try { const ids = (this.enemyTeam||[]).map(e=>e?.id||'-').join(' | ');
+       this.add.text(24, 44, ids, { fontSize: 12, color: '#7a8fa8' }); } catch(e) {}
     this.add.text(width - 24, 20, '5 vs 5', { fontSize: 18, color: '#a8c3e6' }).setOrigin(1,0);
 
     // Build teams
@@ -26,7 +29,7 @@ export class BattleScene extends Phaser.Scene {
         this.enemyTeam[2] = { id: 'bossMeat', name: 'Кровавый фарш', hp: 16000, atk: 350, atkSpeed: 1, currentHp: 16000, isAlive: true, spriteKey: 'boss-meat', isBoss: true };
       }
     }
-    console.log(`${this._logPrefix || `[I${this.island}L${this.level}]`} Enemy team:`, this.enemyTeam);
+    try { console.log(`${this._logPrefix || `[I${this.island}L${this.level}]`} Enemy team:`, this.enemyTeam.map(e=>e?.id||null)); } catch(e) {}
 
     // Layout slots
     const leftX = width * 0.25; const rightX = width * 0.75; const topY = 100; const gapY = 70;

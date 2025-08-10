@@ -15,6 +15,12 @@ export class PrepareScene extends Phaser.Scene {
     // Generate once and reuse for both preview and actual battle
     this.enemies = generateMonsterTeam(this.island, this.level);
     const enemies = this.enemies;
+    // Debug overlay of enemy IDs
+    try {
+      const ids = enemies.map(e => e?.id || '-').join(' | ');
+      const dbg = this.add.text(16, 52, `I${this.island} L${this.level} :: ${ids}`, { fontSize: 12, color: '#7a8fa8' }).setOrigin(0,0.5);
+      this.time.delayedCall(4000, () => { if (dbg && dbg.destroy) dbg.destroy(); });
+    } catch (e) {}
     const c = this.add.container(0, 0);
     const banner = this.add.text(width/2, 90, 'Предстоящие враги', { fontSize: 22, color: '#ffd54f' }).setOrigin(0.5);
     c.add(banner);

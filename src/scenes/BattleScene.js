@@ -261,9 +261,9 @@ export class BattleScene extends Phaser.Scene {
         target.isAlive = false; target.currentHp = 0;
         const sprite = sprites[targetIndex];
         if (sprite) this.tweens.add({ targets: sprite, alpha: 0, scale: 0.7, duration: 220, ease: 'Sine.easeIn', onComplete: () => sprite.setVisible(false) });
-        // achievements: monsters killed +1 for player kills
-        if (isPlayer) window.PathHeroesState.data.achievements.monstersKilled = (window.PathHeroesState.data.achievements.monstersKilled || 0) + 1;
-        hpBars[targetIndex].set(0);
+                 // achievements: monsters killed +1 for player kills
+         try { if (isPlayer) window.PathHeroesState.data.achievements.monstersKilled = (window.PathHeroesState.data.achievements.monstersKilled || 0) + 1; } catch(e) {}
+         if (hpBars[targetIndex]?.set) hpBars[targetIndex].set(0);
         // Bonus stones 50% only when player kills an enemy
         if (isPlayer) { this.killedEnemies++; this._maybeBonusStone(); }
         // Handle death hooks
@@ -273,7 +273,7 @@ export class BattleScene extends Phaser.Scene {
         if (!still) { this._onTeamWiped(isPlayer ? 'enemy' : 'player'); return; }
       } else {
         const hp01 = target.currentHp / target.hp;
-        hpBars[targetIndex].set(hp01);
+        if (hpBars[targetIndex]?.set) hpBars[targetIndex].set(hp01);
       }
     }});
 
@@ -306,7 +306,7 @@ export class BattleScene extends Phaser.Scene {
           if (!still) { this._onTeamWiped(isPlayer ? 'enemy' : 'player'); return; }
         } else {
           const hp01 = target.currentHp / target.hp;
-          hpBars[targetIndex].set(hp01);
+          if (hpBars[targetIndex]?.set) hpBars[targetIndex].set(hp01);
         }
       }});
     }
@@ -341,14 +341,14 @@ export class BattleScene extends Phaser.Scene {
             target.isAlive = false; target.currentHp = 0;
             const sprite = sprites[targetIndex];
             if (sprite) this.tweens.add({ targets: sprite, alpha: 0, scale: 0.7, duration: 220, ease: 'Sine.easeIn', onComplete: () => sprite.setVisible(false) });
-            hpBars[targetIndex].set(0);
+            if (hpBars[targetIndex]?.set) hpBars[targetIndex].set(0);
             if (isPlayer) { this.killedEnemies++; this._maybeBonusStone(); }
             if (isPlayer) this._handleEnemyDeathAtIndex(targetIndex, target);
             const still = opp.some(u => u && u.isAlive);
             if (!still) { this._onTeamWiped(isPlayer ? 'enemy' : 'player'); return; }
           } else {
             const hp01 = target.currentHp / target.hp;
-            hpBars[targetIndex].set(hp01);
+            if (hpBars[targetIndex]?.set) hpBars[targetIndex].set(hp01);
           }
         }});
       }});
@@ -374,12 +374,12 @@ export class BattleScene extends Phaser.Scene {
             target.isAlive = false; target.currentHp = 0; anyKilled = true;
             const sprite = sprites[j];
             if (sprite) this.tweens.add({ targets: sprite, alpha: 0, scale: 0.7, duration: 220, ease: 'Sine.easeIn', onComplete: () => sprite.setVisible(false) });
-            hpBars[j].set(0);
+            if (hpBars[j]?.set) hpBars[j].set(0);
             if (isPlayer) { this.killedEnemies++; this._maybeBonusStone(); }
             if (isPlayer) this._handleEnemyDeathAtIndex(j, target);
           } else {
             const hp01 = target.currentHp / target.hp;
-            hpBars[j].set(hp01);
+            if (hpBars[j]?.set) hpBars[j].set(hp01);
           }
         }
         const still = opp.some(u => u && u.isAlive);
@@ -617,11 +617,11 @@ export class BattleScene extends Phaser.Scene {
         anyKilled = true;
         const sprite = sprites[targetIdx];
         if (sprite) this.tweens.add({ targets: sprite, alpha: 0, scale: 0.7, duration: 220, ease: 'Sine.easeIn', onComplete: () => sprite.setVisible(false) });
-        hpBars[targetIdx].set(0);
+        if (hpBars[targetIdx]?.set) hpBars[targetIdx].set(0);
         // Enemy killed a player — still call generic hook for parity (no special behavior)
       } else {
         const hp01 = target.currentHp / target.hp;
-        hpBars[targetIdx].set(hp01);
+        if (hpBars[targetIdx]?.set) hpBars[targetIdx].set(hp01);
       }
     }
     

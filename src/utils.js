@@ -105,17 +105,18 @@ export function generateMonsterTeam(island, level) {
   }
   // Special boss: Island 2, Level 10 — single beach boss at third position
   if (island === 2 && level === 10) {
-    for (let i = 0; i < 5; i++) team[i] = null;
+    team.length = 0; for (let i = 0; i < 5; i++) team.push(null);
     team[2] = { id: 'bossBeach', name: 'Пляжный босс', hp: 12000, atk: 250, atkSpeed: 1, currentHp: 12000, isAlive: true, spriteKey: 'boss-beach', isBoss: true };
   }
   // Special boss: Island 3, Level 10 — single meat boss at third position, triggers zombie phases on death
   if (island === 3 && level === 10) {
-    for (let i = 0; i < 5; i++) team[i] = null;
+    team.length = 0; // clear any prefilled entries
+    for (let i = 0; i < 5; i++) team.push(null);
     team[2] = { id: 'bossMeat', name: 'Кровавый фарш', hp: 16000, atk: 350, atkSpeed: 1, currentHp: 16000, isAlive: true, spriteKey: 'boss-meat', isBoss: true };
   }
   // Special boss: Island 4, Level 10 — single cloud boss at third position
   if (island === 4 && level === 10) {
-    for (let i = 0; i < 5; i++) team[i] = null;
+    team.length = 0; for (let i = 0; i < 5; i++) team.push(null);
     team[2] = { id: 'bossCloud', name: 'Облачный босс', hp: 12000, atk: 400, atkSpeed: 1, currentHp: 12000, isAlive: true, spriteKey: 'boss-cloud', isBoss: true };
   }
   // Imitator: Island 5 Levels 1-9 replace a random monster with imitator

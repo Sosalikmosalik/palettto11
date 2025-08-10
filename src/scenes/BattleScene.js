@@ -103,7 +103,8 @@ export class BattleScene extends Phaser.Scene {
     this._activeSunSprite = null;
     this._activeEnemySunSprite = null;
     this._logPrefix = `[I${this.island}L${this.level}]`;
-    this._setupAttackLoops();
+         this._setupAttackLoops();
+     console.log(this._logPrefix, 'Ready.');
 
     // After 1 second, transform imitators into copies of opposing player unit in the same row
     this.time.delayedCall(1000, () => this._transformImitators());

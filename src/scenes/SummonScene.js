@@ -18,8 +18,13 @@ export class SummonScene extends Phaser.Scene {
 
     this.summonBtn = makeTextButton(this, width/2, 480, 260, 64, 'Призвать (1 свиток)', () => this.doSummon());
     // Void summon quick access to the left of the main summon button
-    const voidBg = this.add.rectangle(width/2 - 260/2 - 70, 480, 68, 68, 0x131d2d, 0.95).setStrokeStyle(3, 0x8a7aff).setOrigin(0.5).setInteractive({ useHandCursor: true });
-    const voidIcon = this.add.image(voidBg.x, voidBg.y, 'void-hole').setDisplaySize(38, 38).setAlpha(0.95);
+    const voidBg = this.add.rectangle(width/2 - 260/2 - 70, 480, 68, 68, 0x19324d, 0.95).setStrokeStyle(3, 0x8a7aff).setOrigin(0.5).setInteractive({ useHandCursor: true });
+    let voidIcon;
+    if (this.textures.exists && this.textures.exists('void-hole')) {
+      voidIcon = this.add.image(voidBg.x, voidBg.y, 'void-hole').setDisplaySize(38, 38).setAlpha(0.95);
+    } else {
+      voidIcon = this.add.text(voidBg.x, voidBg.y, 'V', { fontSize: 28, color: '#8a7aff' }).setOrigin(0.5);
+    }
     this.tweens.add({ targets: voidIcon, angle: 360, duration: 3000, repeat: -1, ease: 'Linear' });
     this.tweens.add({ targets: [voidBg, voidIcon], scale: { from: 1, to: 1.08 }, yoyo: true, duration: 1400, ease: 'Sine.easeInOut', repeat: -1 });
     voidBg.on('pointerdown', () => voidBg.setFillStyle(0x1a2740, 1)).on('pointerup', () => { voidBg.setFillStyle(0x131d2d, 0.95); this.scene.start('VoidSummon'); }).on('pointerout', () => voidBg.setFillStyle(0x131d2d, 0.95));

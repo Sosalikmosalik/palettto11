@@ -31,8 +31,13 @@ export class MainMenuScene extends Phaser.Scene {
     y += gap;
     const summonBtn = this._animButton(makeTextButton(this, width/2, y, btnW, btnH, 'Призыв', () => this.scene.start('Summon')));
     // Void summon square button to the left
-    const voidBg = this.add.rectangle(width/2 - btnW/2 - 70, y, 68, 68, 0x131d2d, 0.95).setStrokeStyle(3, 0x8a7aff).setOrigin(0.5).setInteractive({ useHandCursor: true });
-    const voidIcon = this.add.image(voidBg.x, voidBg.y, 'void-hole').setDisplaySize(38, 38).setAlpha(0.95);
+    const voidBg = this.add.rectangle(width/2 - btnW/2 - 70, y, 68, 68, 0x19324d, 0.95).setStrokeStyle(3, 0x8a7aff).setOrigin(0.5).setInteractive({ useHandCursor: true });
+    let voidIcon;
+    if (this.textures.exists && this.textures.exists('void-hole')) {
+      voidIcon = this.add.image(voidBg.x, voidBg.y, 'void-hole').setDisplaySize(38, 38).setAlpha(0.95);
+    } else {
+      voidIcon = this.add.text(voidBg.x, voidBg.y, 'V', { fontSize: 28, color: '#8a7aff' }).setOrigin(0.5);
+    }
     // sucking effect: slow rotation and pulsing scale
     this.tweens.add({ targets: voidIcon, angle: 360, duration: 3000, repeat: -1, ease: 'Linear' });
     this.tweens.add({ targets: [voidBg, voidIcon], scale: { from: 1, to: 1.08 }, yoyo: true, duration: 1400, ease: 'Sine.easeInOut', repeat: -1 });

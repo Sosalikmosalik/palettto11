@@ -1,4 +1,4 @@
-import { CHARACTERS, CHARACTER_ORDER, makeTextButton, formatStat, generateMonsterTeam } from '../utils.js';
+import { CHARACTERS, INVENTORY_ORDER, makeTextButton, formatStat, generateMonsterTeam } from '../utils.js';
 
 export class PrepareScene extends Phaser.Scene {
   constructor() { super('Prepare'); }
@@ -55,7 +55,7 @@ export class PrepareScene extends Phaser.Scene {
 
   buildFlatList() {
     this.flat = [];
-    for (const id of CHARACTER_ORDER) {
+    for (const id of INVENTORY_ORDER) {
       const arr = window.PathHeroesState.getInstances(id);
       for (let idx = 0; idx < arr.length; idx++) this.flat.push({ id, idx });
     }

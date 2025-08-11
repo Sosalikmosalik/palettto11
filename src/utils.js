@@ -45,6 +45,12 @@ export const VOID_SUMMON_CHANCES = {
   zeus: 3,
 };
 
+// Inventory display order: base characters first, then unique void characters
+export const INVENTORY_ORDER = [
+  ...CHARACTER_ORDER,
+  ...VOID_SUMMON_ORDER.filter((id) => !CHARACTER_ORDER.includes(id)),
+];
+
 export function cloneDeep(obj) {
   return JSON.parse(JSON.stringify(obj));
 }

@@ -1,4 +1,4 @@
-import { CHARACTERS, CHARACTER_ORDER, makeTextButton, formatStat } from '../utils.js';
+import { CHARACTERS, INVENTORY_ORDER, makeTextButton, formatStat } from '../utils.js';
 import { music } from '../music.js';
 
 export class InventoryScene extends Phaser.Scene {
@@ -25,7 +25,7 @@ export class InventoryScene extends Phaser.Scene {
   buildFlatList() {
     // Expand to instances: [ {charId, instanceIndex} ]
     this.flat = [];
-    for (const id of CHARACTER_ORDER) {
+    for (const id of INVENTORY_ORDER) {
       const arr = window.PathHeroesState.getInstances(id);
       for (let k = 0; k < arr.length; k++) this.flat.push({ id, idx: k });
     }

@@ -22,16 +22,9 @@ export class VoidSummonScene extends Phaser.Scene {
 
   _infoText() {
     const s = window.PathHeroesState.data;
-    const lines = [];
-    lines.push(`Пустотных свитков: ${formatStat(s.voidScrolls || 0)}`);
-    lines.push('Список (шансы и характеристики):');
-    lines.push(`- ${CHARACTERS.bruno.name} — Пастор, Здоровье: 9000, Урон: 500, Скорость атаки: 1/сек, Шанс: ${VOID_SUMMON_CHANCES.bruno}%`);
-    lines.push(`- ${CHARACTERS.shadow.name} — Тень, Здоровье: 10000, Урон: 450, Скорость атаки: 1/сек, Шанс: ${VOID_SUMMON_CHANCES.shadow}%, Способность: может быть атакован только когда все другие персонажи игрока мертвы`);
-    lines.push(`- ${CHARACTERS.x.name} — Маг, Здоровье: 11000, Урон: 700, Скорость атаки: 2/сек, Шанс: ${VOID_SUMMON_CHANCES.x}%, Способность: каждые 2 сек. блокирует случайного монстра на 2 сек.`);
-    lines.push(`- ${CHARACTERS.vampire.name} — Нежить, Здоровье: 15000, Урон: 1500, Скорость атаки: 1/сек, Шанс: ${VOID_SUMMON_CHANCES.vampire}%, Способность: 50% шанс восстановить 20% здоровья при ударе`);
-    lines.push(`- ${CHARACTERS.er1ze.name} — Робот, Здоровье: 12000, Урон: 1000, Скорость атаки: 1/сек, Шанс: ${VOID_SUMMON_CHANCES.er1ze}%, Способность: 10% шанс нанести дополнительно 6000 урона`);
-    lines.push(`- ${CHARACTERS.zeus.name} — Бог, Здоровье: 25000, Урон: 1500, Скорость атаки: 2/сек, Шанс: ${VOID_SUMMON_CHANCES.zeus}%, Способность: каждые 2 сек. увеличивает свой урон на 200`);
-    return lines.join('\n');
+    // Only show percentages for void summon
+    return `Пустотных свитков: ${formatStat(s.voidScrolls || 0)}\nШансы (пустотный):\n` +
+      VOID_SUMMON_ORDER.map(id => `${CHARACTERS[id].name}: ${VOID_SUMMON_CHANCES[id]}%`).join('\n');
   }
 
   refresh() {

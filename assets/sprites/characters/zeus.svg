@@ -1,1 +1,13 @@
-<svg xmlns="http://www.w3.org/2000/svg" width="64" height="64" viewBox="0 0 64 64"><rect width="64" height="64" rx="10" fill="#0a1b2e"/><polygon points="28,10 36,10 30,28 40,28 24,54 30,34 22,34" fill="#fcd34d"/></svg>
+<svg xmlns="http://www.w3.org/2000/svg" width="128" height="128" viewBox="0 0 128 128">
+  <rect width="128" height="128" rx="14" fill="#0a1421"/>
+  <g stroke="#fcd34d" stroke-width="6" stroke-linecap="round" fill="none">
+    <circle cx="64" cy="36" r="12" fill="#fcd34d" stroke="none"/>
+    <line x1="64" y1="48" x2="64" y2="92"/>
+    <line x1="64" y1="58" x2="46" y2="68"/>
+    <line x1="64" y1="58" x2="84" y2="68"/>
+    <line x1="64" y1="92" x2="50" y2="112"/>
+    <line x1="64" y1="92" x2="78" y2="112"/>
+  </g>
+  <!-- lightning bolt in right hand -->
+  <polygon points="84,60 72,78 82,78 70,96 92,74 82,74" fill="#fde68a"/>
+</svg>

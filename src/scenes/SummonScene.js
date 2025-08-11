@@ -17,6 +17,14 @@ export class SummonScene extends Phaser.Scene {
     this.tweens.add({ targets: this.sprite, angle: { from: -2, to: 2 }, duration: 1000, yoyo: true, repeat: -1, ease: 'Sine.easeInOut' });
 
     this.summonBtn = makeTextButton(this, width/2, 480, 260, 64, 'Призвать (1 свиток)', () => this.doSummon());
+    // Void summon quick access to the left of the main summon button
+    const voidBg = this.add.rectangle(width/2 - 260/2 - 70, 480, 68, 68, 0x131d2d, 0.95).setStrokeStyle(3, 0x8a7aff).setOrigin(0.5).setInteractive({ useHandCursor: true });
+    const voidIcon = this.add.image(voidBg.x, voidBg.y, 'void-hole').setDisplaySize(38, 38).setAlpha(0.95);
+    this.tweens.add({ targets: voidIcon, angle: 360, duration: 3000, repeat: -1, ease: 'Linear' });
+    this.tweens.add({ targets: [voidBg, voidIcon], scale: { from: 1, to: 1.08 }, yoyo: true, duration: 1400, ease: 'Sine.easeInOut', repeat: -1 });
+    voidBg.on('pointerdown', () => voidBg.setFillStyle(0x1a2740, 1)).on('pointerup', () => { voidBg.setFillStyle(0x131d2d, 0.95); this.scene.start('VoidSummon'); }).on('pointerout', () => voidBg.setFillStyle(0x131d2d, 0.95));
+    this.add.text(voidBg.x + 52, voidBg.y - 18, 'Призыв (Пустотный свиток)', { fontSize: 16, color: '#e9f1ff' }).setOrigin(0,0.5);
+    this._voidCountText2 = this.add.text(voidBg.x, voidBg.y + 48, `x${formatStat(window.PathHeroesState.data.voidScrolls||0)}`, { fontSize: 16, color: '#a8c3e6' }).setOrigin(0.5,0.5);
     this.refresh();
   }
 
@@ -32,6 +40,7 @@ export class SummonScene extends Phaser.Scene {
     const can = s.scrolls > 0;
     if (!can) this.summonBtn.bg.disableInteractive(); else this.summonBtn.bg.setInteractive({ useHandCursor: true });
     this.info.setText(this._infoText());
+    if (this._voidCountText2) this._voidCountText2.setText(`x${formatStat(s.voidScrolls||0)}`);
   }
 
   doSummon() {

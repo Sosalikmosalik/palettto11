@@ -10,6 +10,7 @@ export class State {
       scrolls: 2,
       // Separate pool for star summons
       starScrolls: 0,
+      voidScrolls: 0,
       lifeStones: 0,
       soundOn: true,
       graphicsQuality: 'high', // low|medium|high
@@ -52,6 +53,7 @@ export class State {
     if (!this.data.owned) this.data.owned = {};
     if (typeof this.data.scrolls !== 'number') this.data.scrolls = 0;
     if (typeof this.data.starScrolls !== 'number') this.data.starScrolls = 0;
+    if (typeof this.data.voidScrolls !== 'number') this.data.voidScrolls = 0;
     if (!this.data.achievements) {
       this.data.achievements = cloneDeep(this._default.achievements);
     } else {
@@ -139,6 +141,11 @@ export class State {
     this._save();
   }
 
+  addVoidScrolls(amount) {
+    this.data.voidScrolls = clamp((this.data.voidScrolls || 0) + amount, 0, 999999);
+    this._save();
+  }
+
   // Safely increment monsters killed achievement counter
   addMonsterKill() {
     try {
@@ -155,6 +162,13 @@ export class State {
   useStarScroll() {
     if ((this.data.starScrolls || 0) <= 0) return false;
     this.data.starScrolls -= 1;
+    this._save();
+    return true;
+  }
+
+  useVoidScroll() {
+    if ((this.data.voidScrolls || 0) <= 0) return false;
+    this.data.voidScrolls -= 1;
     this._save();
     return true;
   }

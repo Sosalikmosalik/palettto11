@@ -38,13 +38,6 @@ export class PreloadScene extends Phaser.Scene {
     this.load.image('stickman-red', 'assets/sprites/characters/stickman-red.svg');
     this.load.image('boss-dungeon', 'assets/sprites/characters/boss-dungeon.svg');
     this.load.image('stickman-angel', 'assets/sprites/characters/stickman-angel.svg');
-    // Void heroes
-    this.load.image('bruno', 'assets/sprites/characters/bruno.svg');
-    this.load.image('shadow', 'assets/sprites/characters/shadow.svg');
-    this.load.image('x', 'assets/sprites/characters/x.svg');
-    this.load.image('vampire', 'assets/sprites/characters/vampire.svg');
-    this.load.image('er1ze', 'assets/sprites/characters/er1ze.svg');
-    this.load.image('zeus', 'assets/sprites/characters/zeus.svg');
     // Island backgrounds and icons
     this.load.image('bg-jungle', 'assets/backgrounds/bg-jungle.svg');
     this.load.image('bg-beach', 'assets/backgrounds/bg-beach.svg');
@@ -88,7 +81,6 @@ export class PreloadScene extends Phaser.Scene {
     this.load.image('ach-3-5', 'assets/icons/ach-3-5.svg');
     // UI extras
     this.load.image('icon-sword-yellow', 'assets/icons/icon-sword-yellow.svg');
-    this.load.image('void-hole', 'assets/ui/void-hole.svg');
   }
   create() {
     this.scene.start('MainMenu');

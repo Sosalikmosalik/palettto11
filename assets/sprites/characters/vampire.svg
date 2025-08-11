@@ -1,1 +1,16 @@
-<svg xmlns="http://www.w3.org/2000/svg" width="64" height="64" viewBox="0 0 64 64"><rect width="64" height="64" rx="10" fill="#3b0d0c"/><circle cx="32" cy="28" r="16" fill="#ef4444"/><path d="M24 44 L32 52 L40 44" stroke="#ef4444" stroke-width="3" fill="none"/></svg>
+<svg xmlns="http://www.w3.org/2000/svg" width="128" height="128" viewBox="0 0 128 128">
+  <rect width="128" height="128" rx="14" fill="#1a0b0b"/>
+  <!-- cape -->
+  <path d="M40 60 C50 90, 78 90, 88 60 L64 48 Z" fill="#ef4444" fill-opacity="0.5"/>
+  <g stroke="#ef4444" stroke-width="6" stroke-linecap="round" fill="none">
+    <circle cx="64" cy="36" r="12" fill="#ef4444" stroke="none"/>
+    <line x1="64" y1="48" x2="64" y2="92"/>
+    <line x1="64" y1="58" x2="46" y2="70"/>
+    <line x1="64" y1="58" x2="82" y2="70"/>
+    <line x1="64" y1="92" x2="50" y2="112"/>
+    <line x1="64" y1="92" x2="78" y2="112"/>
+  </g>
+  <!-- fangs -->
+  <polygon points="60,42 62,48 58,48" fill="#ffffff"/>
+  <polygon points="68,42 70,48 66,48" fill="#ffffff"/>
+</svg>

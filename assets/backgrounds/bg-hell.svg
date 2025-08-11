@@ -1,0 +1,66 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="960" height="540" viewBox="0 0 960 540">
+  <!-- Sky gradient -->
+  <defs>
+    <linearGradient id="sky" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#2b0a0a"/>
+      <stop offset="60%" stop-color="#200707"/>
+      <stop offset="100%" stop-color="#140404"/>
+    </linearGradient>
+    <radialGradient id="glow" cx="0.5" cy="0.75" r="0.7">
+      <stop offset="0%" stop-color="#a81e1e" stop-opacity="0.9"/>
+      <stop offset="60%" stop-color="#6b1414" stop-opacity="0.5"/>
+      <stop offset="100%" stop-color="#140404" stop-opacity="0"/>
+    </radialGradient>
+  </defs>
+  <rect width="960" height="540" fill="url(#sky)"/>
+  <circle cx="480" cy="380" r="380" fill="url(#glow)"/>
+
+  <!-- Distant mountain silhouettes (parallax layers) -->
+  <g fill="#2a0a0a">
+    <path d="M0 320 L80 300 L140 320 L220 290 L300 320 L380 300 L460 320 L540 295 L620 320 L700 300 L780 320 L860 300 L960 330 L960 420 L0 420 Z"/>
+  </g>
+  <g fill="#3b0e0e">
+    <path d="M0 360 L90 330 L150 360 L240 330 L320 360 L400 335 L480 360 L560 340 L640 360 L720 335 L800 360 L880 340 L960 370 L960 420 L0 420 Z"/>
+  </g>
+
+  <!-- Main volcano with plume -->
+  <g>
+    <path d="M580 420 L650 220 L740 420 Z" fill="#4a1111"/>
+    <path d="M647 230 C640 250 628 256 620 272 L620 285 L675 285 L675 272 C666 256 654 250 647 230 Z" fill="#ff6b6b"/>
+    <!-- smoke plume -->
+    <g fill="#3a0e0e" opacity="0.6">
+      <ellipse cx="650" cy="200" rx="36" ry="18"/>
+      <ellipse cx="660" cy="180" rx="28" ry="14"/>
+      <ellipse cx="670" cy="162" rx="22" ry="11"/>
+    </g>
+  </g>
+
+  <!-- Lava lake / ground -->
+  <rect x="0" y="420" width="960" height="120" fill="#150505"/>
+  <path d="M0 420 C120 390 180 390 300 420 C420 450 540 450 660 420 C780 390 840 390 960 420 L960 540 L0 540 Z" fill="#7a1a1a"/>
+  <path d="M0 440 C80 430 160 450 240 440 C320 430 400 450 480 440 C560 430 640 450 720 440 C800 430 880 450 960 440" stroke="#ff6b6b" stroke-width="6" fill="none"/>
+
+  <!-- Lava falls / rivers -->
+  <path d="M120 360 C130 380 140 400 150 420" stroke="#ff6b6b" stroke-width="5" fill="none"/>
+  <path d="M320 350 C330 370 340 395 350 420" stroke="#ff6b6b" stroke-width="5" fill="none"/>
+  <path d="M820 360 C828 380 836 400 844 420" stroke="#ff6b6b" stroke-width="5" fill="none"/>
+
+  <!-- Foreground jagged rocks -->
+  <g fill="#1a0505">
+    <path d="M40 420 L70 380 L90 420 Z"/>
+    <path d="M210 420 L240 380 L260 420 Z"/>
+    <path d="M420 420 L450 380 L470 420 Z"/>
+    <path d="M720 420 L750 380 L770 420 Z"/>
+  </g>
+
+  <!-- Embers -->
+  <g fill="#ff8a65" opacity="0.9">
+    <circle cx="180" cy="360" r="5"/>
+    <circle cx="420" cy="340" r="4"/>
+    <circle cx="700" cy="350" r="5"/>
+    <circle cx="520" cy="310" r="3.5"/>
+    <circle cx="260" cy="320" r="3.5"/>
+    <circle cx="860" cy="330" r="4"/>
+  </g>
+</svg>
+

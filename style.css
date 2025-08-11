@@ -1,0 +1,33 @@
+:root {
+  --bg: #0e1a2b;
+  --ink: #e9f1ff;
+  --accent: #50e3c2;
+}
+
+html, body {
+  width: 100%;
+  height: 100%;
+  margin: 0;
+  padding: 0;
+  background: var(--bg);
+  color: var(--ink);
+  font-family: Inter, system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial, "Apple Color Emoji", "Segoe UI Emoji";
+}
+
+#game-root {
+  position: fixed;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+canvas {
+  outline: none;
+  border-radius: 12px;
+  box-shadow: 0 10px 40px rgba(0,0,0,0.45);
+}
+
+/* Mobile safe tap highlights off */
+* { -webkit-tap-highlight-color: transparent; }
+

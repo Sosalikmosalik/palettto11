@@ -1,0 +1,54 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="960" height="540" viewBox="0 0 960 540">
+  <!-- Back wall and floor -->
+  <rect width="960" height="540" fill="#f5efe6"/>
+  <rect x="0" y="410" width="960" height="130" fill="#e6dccd"/>
+  <!-- Floor tiles -->
+  <g stroke="#d8cbb6" stroke-width="2">
+    <path d="M0 450 H960 M0 490 H960"/>
+    <path d="M120 410 V540 M240 410 V540 M360 410 V540 M480 410 V540 M600 410 V540 M720 410 V540 M840 410 V540"/>
+  </g>
+
+  <!-- Columns -->
+  <g fill="#e0d3c0" stroke="#b29a7b" stroke-width="4">
+    <rect x="110" y="100" width="36" height="260" rx="8"/>
+    <rect x="265" y="100" width="36" height="260" rx="8"/>
+    <rect x="620" y="100" width="36" height="260" rx="8"/>
+    <rect x="775" y="100" width="36" height="260" rx="8"/>
+  </g>
+
+  <!-- Arch / frieze -->
+  <rect x="160" y="110" width="640" height="36" fill="#e0d3c0" stroke="#b29a7b" stroke-width="4"/>
+
+  <!-- Framed paintings -->
+  <g>
+    <rect x="200" y="170" width="140" height="100" fill="#fffaf1" stroke="#7c674d" stroke-width="8"/>
+    <circle cx="270" cy="220" r="28" fill="#ffd54f"/>
+    
+    <rect x="410" y="160" width="160" height="110" fill="#fffaf1" stroke="#7c674d" stroke-width="8"/>
+    <path d="M420 250 L480 180 L560 250 Z" fill="#90caf9"/>
+    
+    <rect x="620" y="170" width="140" height="100" fill="#fffaf1" stroke="#7c674d" stroke-width="8"/>
+    <rect x="640" y="190" width="100" height="60" fill="#c5e1a5"/>
+  </g>
+
+  <!-- Pedestals with exhibits -->
+  <g>
+    <rect x="300" y="320" width="80" height="40" fill="#d6c7af" stroke="#b29a7b" stroke-width="3"/>
+    <ellipse cx="340" cy="312" rx="16" ry="10" fill="#b0bec5"/>
+    <rect x="520" y="320" width="80" height="40" fill="#d6c7af" stroke="#b29a7b" stroke-width="3"/>
+    <path d="M560 312 C550 300 570 290 560 280 C550 270 540 290 550 300 Z" fill="#cfd8dc"/>
+  </g>
+
+  <!-- Rope barriers -->
+  <g stroke="#7c674d" stroke-width="6" fill="none">
+    <path d="M180 360 C240 330 320 330 380 360"/>
+    <path d="M480 360 C540 330 620 330 680 360"/>
+  </g>
+  <g fill="#b29a7b">
+    <circle cx="180" cy="360" r="6"/>
+    <circle cx="380" cy="360" r="6"/>
+    <circle cx="480" cy="360" r="6"/>
+    <circle cx="680" cy="360" r="6"/>
+  </g>
+</svg>
+

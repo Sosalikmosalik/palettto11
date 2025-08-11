@@ -1,0 +1,19 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="80" height="80" viewBox="0 0 80 80">
+  <rect width="80" height="80" fill="none"/>
+  <!-- head -->
+  <circle cx="40" cy="18" r="10" fill="#000000" stroke="#000000" stroke-width="2"/>
+  <!-- halo (black) -->
+  <ellipse cx="40" cy="8" rx="10" ry="3" fill="#000000"/>
+  <!-- body -->
+  <line x1="40" y1="28" x2="40" y2="50" stroke="#000000" stroke-width="6" stroke-linecap="round"/>
+  <!-- arms -->
+  <line x1="40" y1="34" x2="24" y2="44" stroke="#000000" stroke-width="6" stroke-linecap="round"/>
+  <line x1="40" y1="34" x2="56" y2="44" stroke="#000000" stroke-width="6" stroke-linecap="round"/>
+  <!-- legs -->
+  <line x1="40" y1="50" x2="28" y2="66" stroke="#000000" stroke-width="6" stroke-linecap="round"/>
+  <line x1="40" y1="50" x2="52" y2="66" stroke="#000000" stroke-width="6" stroke-linecap="round"/>
+  <!-- wings -->
+  <path d="M22 34 C14 30 12 40 18 46 C24 52 30 48 30 42" fill="#000000" stroke="#000000" stroke-width="2"/>
+  <path d="M58 34 C66 30 68 40 62 46 C56 52 50 48 50 42" fill="#000000" stroke="#000000" stroke-width="2"/>
+</svg>
+

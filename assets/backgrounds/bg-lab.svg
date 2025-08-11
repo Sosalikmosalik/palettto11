@@ -1,0 +1,50 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="960" height="540" viewBox="0 0 960 540">
+  <!-- Base -->
+  <rect width="960" height="540" fill="#0e1a2b"/>
+  <rect x="0" y="420" width="960" height="120" fill="#0a1320"/>
+  
+  <!-- Floor grid -->
+  <g stroke="#0f2236" stroke-width="1">
+    <path d="M0 460 H960 M0 500 H960"/>
+    <path d="M80 420 V540 M200 420 V540 M320 420 V540 M440 420 V540 M560 420 V540 M680 420 V540 M800 420 V540"/>
+  </g>
+
+  <!-- Lab cabinets / pillars -->
+  <rect x="120" y="110" width="160" height="210" rx="6" fill="#17304d" stroke="#1f3b5a" stroke-width="3"/>
+  <rect x="330" y="80" width="140" height="260" rx="6" fill="#142a44" stroke="#1f3b5a" stroke-width="3"/>
+  <rect x="510" y="130" width="180" height="230" rx="6" fill="#17304d" stroke="#1f3b5a" stroke-width="3"/>
+  <rect x="730" y="100" width="140" height="260" rx="6" fill="#142a44" stroke="#1f3b5a" stroke-width="3"/>
+
+  <!-- Shelves with flasks -->
+  <g>
+    <rect x="140" y="150" width="120" height="8" fill="#1f3b5a"/>
+    <rect x="140" y="190" width="120" height="8" fill="#1f3b5a"/>
+    <rect x="140" y="230" width="120" height="8" fill="#1f3b5a"/>
+    <!-- flasks -->
+    <ellipse cx="160" cy="146" rx="8" ry="5" fill="#50e3c2"/>
+    <rect x="156" y="130" width="8" height="14" fill="#5ad9cc"/>
+    <ellipse cx="190" cy="186" rx="7" ry="4" fill="#ffd54f"/>
+    <rect x="186" y="172" width="8" height="14" fill="#ffe082"/>
+    <ellipse cx="220" cy="226" rx="9" ry="5" fill="#ff6b6b"/>
+    <rect x="216" y="208" width="8" height="18" fill="#ff8a80"/>
+  </g>
+
+  <!-- Monitors -->
+  <rect x="350" y="110" width="100" height="60" rx="6" fill="#0f2236" stroke="#2c6aa0" stroke-width="3"/>
+  <rect x="360" y="120" width="80" height="40" fill="#102a45"/>
+  <rect x="540" y="150" width="120" height="70" rx="6" fill="#0f2236" stroke="#2c6aa0" stroke-width="3"/>
+  <rect x="552" y="162" width="96" height="46" fill="#102a45"/>
+  <circle cx="552" cy="188" r="3" fill="#50e3c2"/>
+
+  <!-- Pipes / conduits -->
+  <g stroke="#1f3b5a" stroke-width="6" fill="none">
+    <path d="M740 140 H900 V200"/>
+    <path d="M180 330 H260 V300 H320"/>
+  </g>
+
+  <!-- Glow orbs / indicators -->
+  <circle cx="220" cy="180" r="10" fill="#50e3c2"/>
+  <circle cx="380" cy="200" r="8" fill="#50e3c2"/>
+  <circle cx="580" cy="180" r="9" fill="#50e3c2"/>
+</svg>
+

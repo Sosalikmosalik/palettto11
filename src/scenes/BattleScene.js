@@ -44,10 +44,11 @@ export class BattleScene extends Phaser.Scene {
         // Bastin: 3s invulnerability with shield visual
         if (p.id === 'bastin') {
           p.invulnUntil = this.time.now + 3000;
+          p.damageBuffUntil = this.time.now + 3000;
           const shield = this.add.image(leftX + 36, y, 'shield').setDisplaySize(30, 30).setAlpha(0.95);
           this.tweens.add({ targets: shield, angle: { from: -8, to: 8 }, duration: 600, yoyo: true, repeat: -1, ease: 'Sine.easeInOut' });
           p._shieldSprite = shield;
-          this.time.delayedCall(3000, () => { if (p._shieldSprite) { p._shieldSprite.destroy(); p._shieldSprite = null; } p.invulnUntil = 0; });
+          this.time.delayedCall(3000, () => { if (p._shieldSprite) { p._shieldSprite.destroy(); p._shieldSprite = null; } p.invulnUntil = 0; p.damageBuffUntil = 0; });
         }
       } else {
         const txt = this.add.text(leftX - 30, y - 10, '— пусто —', { fontSize: 14, color: '#7a8fa8' });
@@ -74,10 +75,11 @@ export class BattleScene extends Phaser.Scene {
         // Imitator Bastin: 3s invulnerability with white shield visual
         if (e.originalId === 'bastin') {
           e.invulnUntil = this.time.now + 3000;
+          e.damageBuffUntil = this.time.now + 3000;
           const shield = this.add.image(rightX - 36, y, 'shield-white').setDisplaySize(30, 30).setAlpha(0.95);
           this.tweens.add({ targets: shield, angle: { from: -8, to: 8 }, duration: 600, yoyo: true, repeat: -1, ease: 'Sine.easeInOut' });
           e._shieldSprite = shield;
-          this.time.delayedCall(3000, () => { if (e._shieldSprite) { e._shieldSprite.destroy(); e._shieldSprite = null; } e.invulnUntil = 0; });
+          this.time.delayedCall(3000, () => { if (e._shieldSprite) { e._shieldSprite.destroy(); e._shieldSprite = null; } e.invulnUntil = 0; e.damageBuffUntil = 0; });
         }
       }
     }
@@ -271,7 +273,9 @@ export class BattleScene extends Phaser.Scene {
           ctx.state = 'attacking';
           if (now >= ctx.nextAttackAt) {
             // Apply damage
-            oppUnit.currentHp -= u.atk;
+            let damage = u.atk;
+            if ((u.id === 'bastin' || u.originalId === 'bastin') && (u.damageBuffUntil || 0) > this.time.now) damage *= 2;
+            oppUnit.currentHp -= damage;
             // Small nudge
             const ox = mySprite.x; const nx = ox + (ctx.isPlayer ? 6 : -6);
             this.tweens.add({ targets: mySprite, x: nx, duration: 80, yoyo: true, onComplete: () => { try { mySprite.setX(ox); } catch (e) {} } });
@@ -456,6 +460,7 @@ export class BattleScene extends Phaser.Scene {
     let damage = unit.atk * (opts.multiplier || 1);
     if (isPlayer && (this.sunBuffUntil || 0) > this.time.now) damage *= 3;
     if (!isPlayer && (this.enemySunBuffUntil || 0) > this.time.now) damage *= 3;
+    if ((unit.id === 'bastin' || unit.originalId === 'bastin') && (unit.damageBuffUntil || 0) > this.time.now) damage *= 2;
     target.currentHp -= damage;
 
     // attack nudge
@@ -526,6 +531,7 @@ export class BattleScene extends Phaser.Scene {
         let damage = ctx.unit.atk * 3;
         if (isPlayer && (this.sunBuffUntil || 0) > this.time.now) damage *= 3;
         if (!isPlayer && (this.enemySunBuffUntil || 0) > this.time.now) damage *= 3;
+        if ((ctx.unit.id === 'bastin' || ctx.unit.originalId === 'bastin') && (ctx.unit.damageBuffUntil || 0) > this.time.now) damage *= 2;
         target.currentHp -= damage;
         if (target.currentHp <= 0) {
           target.isAlive = false; target.currentHp = 0;
@@ -555,6 +561,7 @@ export class BattleScene extends Phaser.Scene {
       let damage = ctx.unit.atk * 2;
       if (isPlayer && (this.sunBuffUntil || 0) > this.time.now) damage *= 3;
       if (!isPlayer && (this.enemySunBuffUntil || 0) > this.time.now) damage *= 3;
+      if ((ctx.unit.id === 'bastin' || ctx.unit.originalId === 'bastin') && (ctx.unit.damageBuffUntil || 0) > this.time.now) damage *= 2;
       target.currentHp -= damage; softFlash(targetSprite);
       if (target.currentHp <= 0) {
         target.isAlive = false; target.currentHp = 0;
@@ -645,6 +652,7 @@ export class BattleScene extends Phaser.Scene {
         let damage = unit.atk;
         if (isPlayer && (this.sunBuffUntil || 0) > this.time.now) damage *= 3;
         if (!isPlayer && (this.enemySunBuffUntil || 0) > this.time.now) damage *= 3;
+        if ((unit.id === 'bastin' || unit.originalId === 'bastin') && (unit.damageBuffUntil || 0) > this.time.now) damage *= 2;
         target.currentHp -= damage;
         // attack animation: slight nudge
         const attacker = selfSprites[startIndex];
@@ -687,6 +695,7 @@ export class BattleScene extends Phaser.Scene {
           // Imitator benefits from enemy sun buff instead of player sun buff
           if (isPlayer && (this.sunBuffUntil || 0) > this.time.now) damage *= 3;
           if (!isPlayer && (this.enemySunBuffUntil || 0) > this.time.now) damage *= 3;
+          if ((unit.id === 'bastin' || unit.originalId === 'bastin') && (unit.damageBuffUntil || 0) > this.time.now) damage *= 2;
           target.currentHp -= damage;
           // star burst from attacker position towards target
           const attackerSprite = selfSprites[startIndex];
@@ -735,6 +744,7 @@ export class BattleScene extends Phaser.Scene {
               let damage = unit.atk * 3;
               if (isPlayer && (this.sunBuffUntil || 0) > this.time.now) damage *= 3;
               if (!isPlayer && (this.enemySunBuffUntil || 0) > this.time.now) damage *= 3;
+              if ((unit.id === 'bastin' || unit.originalId === 'bastin') && (unit.damageBuffUntil || 0) > this.time.now) damage *= 2;
               target.currentHp -= damage;
               if (target.currentHp <= 0) {
                 target.isAlive = false; target.currentHp = 0;
@@ -769,6 +779,7 @@ export class BattleScene extends Phaser.Scene {
             let damage = unit.atk * 2;
             if (isPlayer && (this.sunBuffUntil || 0) > this.time.now) damage *= 3;
             if (!isPlayer && (this.enemySunBuffUntil || 0) > this.time.now) damage *= 3;
+            if ((ctx.unit.id === 'bastin' || ctx.unit.originalId === 'bastin') && (ctx.unit.damageBuffUntil || 0) > this.time.now) damage *= 2;
             target.currentHp -= damage;
             softFlash(targetSprite);
             if (target.currentHp <= 0) {
@@ -1004,6 +1015,8 @@ export class BattleScene extends Phaser.Scene {
       
       let damage = unit.atk;
       if ((this.enemySunBuffUntil || 0) > this.time.now) damage *= 3;
+      // Bastin's personal damage buff should apply when Bastin is the attacker, not the target
+      if ((unit.id === 'bastin' || unit.originalId === 'bastin') && (unit.damageBuffUntil || 0) > this.time.now) damage *= 2;
       target.currentHp -= damage;
       
       // Visual feedback

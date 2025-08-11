@@ -25,7 +25,11 @@ export class InventoryScene extends Phaser.Scene {
   buildFlatList() {
     // Expand to instances: [ {charId, instanceIndex} ]
     this.flat = [];
-    for (const id of CHARACTER_ORDER) {
+    const owned = window.PathHeroesState.data.owned || {};
+    const ids = Object.keys(owned);
+    // stable order: by name alphabetically
+    ids.sort((a,b) => (CHARACTERS[a]?.name || a).localeCompare(CHARACTERS[b]?.name || b, 'ru'));
+    for (const id of ids) {
       const arr = window.PathHeroesState.getInstances(id);
       for (let k = 0; k < arr.length; k++) this.flat.push({ id, idx: k });
     }

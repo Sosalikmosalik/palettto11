@@ -44,11 +44,10 @@ export class BattleScene extends Phaser.Scene {
         // Bastin: 3s invulnerability with shield visual
         if (p.id === 'bastin') {
           p.invulnUntil = this.time.now + 3000;
-          p.damageBuffUntil = this.time.now + 3000;
           const shield = this.add.image(leftX + 36, y, 'shield').setDisplaySize(30, 30).setAlpha(0.95);
           this.tweens.add({ targets: shield, angle: { from: -8, to: 8 }, duration: 600, yoyo: true, repeat: -1, ease: 'Sine.easeInOut' });
           p._shieldSprite = shield;
-          this.time.delayedCall(3000, () => { if (p._shieldSprite) { p._shieldSprite.destroy(); p._shieldSprite = null; } p.invulnUntil = 0; p.damageBuffUntil = 0; });
+          this.time.delayedCall(3000, () => { if (p._shieldSprite) { p._shieldSprite.destroy(); p._shieldSprite = null; } p.invulnUntil = 0; });
         }
       } else {
         const txt = this.add.text(leftX - 30, y - 10, '— пусто —', { fontSize: 14, color: '#7a8fa8' });
@@ -75,11 +74,10 @@ export class BattleScene extends Phaser.Scene {
         // Imitator Bastin: 3s invulnerability with white shield visual
         if (e.originalId === 'bastin') {
           e.invulnUntil = this.time.now + 3000;
-          e.damageBuffUntil = this.time.now + 3000;
           const shield = this.add.image(rightX - 36, y, 'shield-white').setDisplaySize(30, 30).setAlpha(0.95);
           this.tweens.add({ targets: shield, angle: { from: -8, to: 8 }, duration: 600, yoyo: true, repeat: -1, ease: 'Sine.easeInOut' });
           e._shieldSprite = shield;
-          this.time.delayedCall(3000, () => { if (e._shieldSprite) { e._shieldSprite.destroy(); e._shieldSprite = null; } e.invulnUntil = 0; e.damageBuffUntil = 0; });
+          this.time.delayedCall(3000, () => { if (e._shieldSprite) { e._shieldSprite.destroy(); e._shieldSprite = null; } e.invulnUntil = 0; });
         }
       }
     }
@@ -183,16 +181,6 @@ export class BattleScene extends Phaser.Scene {
     const startBase = Math.max(now, this.roundStartAt || now);
     this.nextAnubisBuffAt = startBase + 3000;
     this.nextEnemyAnubisBuffAt = startBase + 3000;
-    // Zeus: increment own atk by 200 every 2s
-    const allUnits = [...this.playerTeam, ...this.enemyTeam].filter(Boolean);
-    for (const u of allUnits) {
-      if (u.id === 'zeus' || u.originalId === 'zeus') {
-        u._zeusNextAt = startBase + 2000;
-      }
-    }
-    // X: schedule stuns, every 2s stun random monster for 2s (player-side X and enemy imitator X)
-    this._xNextPlayer = startBase + 2000;
-    this._xNextEnemy = startBase + 2000;
   }
 
   // New simplified lane battle: units move towards their target and attack in melee
@@ -283,9 +271,7 @@ export class BattleScene extends Phaser.Scene {
           ctx.state = 'attacking';
           if (now >= ctx.nextAttackAt) {
             // Apply damage
-            let damage = u.atk;
-            if ((u.id === 'bastin' || u.originalId === 'bastin') && (u.damageBuffUntil || 0) > this.time.now) damage *= 2;
-            oppUnit.currentHp -= damage;
+            oppUnit.currentHp -= u.atk;
             // Small nudge
             const ox = mySprite.x; const nx = ox + (ctx.isPlayer ? 6 : -6);
             this.tweens.add({ targets: mySprite, x: nx, duration: 80, yoyo: true, onComplete: () => { try { mySprite.setX(ox); } catch (e) {} } });
@@ -332,45 +318,6 @@ export class BattleScene extends Phaser.Scene {
         this.nextEnemyAnubisBuffAt = now + 3000;
       }
 
-      // Zeus tick: increase his atk by 200
-      const handleZeus = (teamArr) => {
-        for (const u of teamArr) {
-          if (!u || !u.isAlive) continue;
-          if ((u.id === 'zeus' || u.originalId === 'zeus') && now >= (u._zeusNextAt || Infinity)) {
-            u.atk = (u.atk || 0) + 200;
-            u._zeusNextAt = now + 2000;
-          }
-        }
-      };
-      handleZeus(this.playerTeam);
-      handleZeus(this.enemyTeam);
-
-      // X tick: stun a random opposing monster for 2s
-      const playerHasX = this.playerTeam.some(u => u && u.id === 'x' && u.isAlive);
-      if (playerHasX && now >= (this._xNextPlayer || Infinity)) {
-        this._xNextPlayer = now + 2000;
-        const livingIdx = [];
-        for (let j = 0; j < this.enemyTeam.length; j++) if (this.enemyTeam[j]?.isAlive) livingIdx.push(j);
-        if (livingIdx.length > 0) {
-          const idx = livingIdx[Math.floor(Math.random()*livingIdx.length)];
-          const t = this.enemyTeam[idx];
-          t.stunnedUntil = Math.max(t.stunnedUntil || 0, now + 2000);
-          const spr = this.enemySprites[idx]; if (spr) { try { spr.setTint(0x8888ff); this.time.delayedCall(200, ()=> spr.clearTint()); } catch (e) {} }
-        }
-      }
-      const enemyHasX = this.enemyTeam.some(u => u && u.originalId === 'x' && u.isAlive);
-      if (enemyHasX && now >= (this._xNextEnemy || Infinity)) {
-        this._xNextEnemy = now + 2000;
-        const livingIdx = [];
-        for (let j = 0; j < this.playerTeam.length; j++) if (this.playerTeam[j]?.isAlive) livingIdx.push(j);
-        if (livingIdx.length > 0) {
-          const idx = livingIdx[Math.floor(Math.random()*livingIdx.length)];
-          const t = this.playerTeam[idx];
-          t.stunnedUntil = Math.max(t.stunnedUntil || 0, now + 2000);
-          const spr = this.playerSprites[idx]; if (spr) { try { spr.setTint(0x8888ff); this.time.delayedCall(200, ()=> spr.clearTint()); } catch (e) {} }
-        }
-      }
-
       const step = (ctxArr, isPlayer) => {
         for (let i = 0; i < ctxArr.length; i++) {
           const ctx = ctxArr[i];
@@ -401,8 +348,6 @@ export class BattleScene extends Phaser.Scene {
 
           // regular attack (no catch-up to avoid burst on start)
           if (now >= ctx.nextAttackAt) {
-            // Skip attack if stunned
-            if ((u.stunnedUntil || 0) > now) { ctx.nextAttackAt = now + ctx.atkInterval; continue; }
             this._attackUnit(ctx, isPlayer);
             ctx.nextAttackAt = now + ctx.atkInterval;
             if (this.ended) return;
@@ -410,26 +355,20 @@ export class BattleScene extends Phaser.Scene {
 
           // robot extra
           if (now >= ctx.robotNextAt) {
-            if ((u.stunnedUntil || 0) > now) { ctx.robotNextAt = now + 2000; } else {
             this._attackUnit(ctx, isPlayer, { multiplier: 2, special: 'robot' });
             ctx.robotNextAt = now + 2000;
-            }
           }
 
           // geomis meteor
           if (now >= ctx.meteorNextAt) {
-            if ((u.stunnedUntil || 0) > now) { ctx.meteorNextAt = now + 3000; } else {
             this._geomisMeteor(ctx, isPlayer);
             ctx.meteorNextAt = now + 3000;
-            }
           }
 
           // starlord aoe
           if (now >= ctx.starNextAt) {
-            if ((u.stunnedUntil || 0) > now) { ctx.starNextAt = now + 5000; } else {
             this._starLordAoe(ctx, isPlayer);
             ctx.starNextAt = now + 5000;
-            }
           }
 
           // cloud boss summon
@@ -508,16 +447,6 @@ export class BattleScene extends Phaser.Scene {
     if (!isPlayer && (target?.id === 'bastin' || target?.originalId === 'bastin') && (target.invulnUntil || 0) > this.time.now) return true;
     if (isPlayer && target?.originalId === 'bastin' && (target.invulnUntil || 0) > this.time.now) return true;
 
-    // Shadow: cannot be targeted unless all other player units are dead
-    if (!isPlayer && (target?.id === 'shadow') ) {
-      const othersAlive = this.playerTeam.some((u, idx) => idx !== targetIndex && u && u.isAlive);
-      if (othersAlive) return true;
-    }
-    if (isPlayer && target?.originalId === 'shadow') {
-      const othersAlive = this.enemyTeam.some((u, idx) => idx !== targetIndex && u && u.isAlive);
-      if (othersAlive) return true;
-    }
-
     // Beach boss special: replace regular hit with 2-target strike
     if (!isPlayer && unit.id === 'bossBeach' && !opts.special) {
       this._beachBossAttack(unit, opp, sprites, hpBars, selfSprites, ctx.index);
@@ -527,16 +456,7 @@ export class BattleScene extends Phaser.Scene {
     let damage = unit.atk * (opts.multiplier || 1);
     if (isPlayer && (this.sunBuffUntil || 0) > this.time.now) damage *= 3;
     if (!isPlayer && (this.enemySunBuffUntil || 0) > this.time.now) damage *= 3;
-    if ((unit.id === 'bastin' || unit.originalId === 'bastin') && (unit.damageBuffUntil || 0) > this.time.now) damage *= 2;
-    // Er1ze: 10% extra 6000 damage
-    if (Math.random() < 0.10 && (unit.id === 'er1ze' || unit.originalId === 'er1ze')) damage += 6000;
     target.currentHp -= damage;
-    // Vampire: 50% chance to heal 20% max HP on hit
-    if ((unit.id === 'vampire' || unit.originalId === 'vampire') && Math.random() < 0.5) {
-      unit.currentHp = Math.min(unit.hp, (unit.currentHp || 0) + Math.floor(unit.hp * 0.2));
-      const selfHpBar = isPlayer ? this.playerHpBars[ctx.index] : this.enemyHpBars[ctx.index];
-      selfHpBar?.set?.(unit.currentHp / unit.hp);
-    }
 
     // attack nudge
     const attacker = selfSprites[ctx.index];
@@ -606,8 +526,6 @@ export class BattleScene extends Phaser.Scene {
         let damage = ctx.unit.atk * 3;
         if (isPlayer && (this.sunBuffUntil || 0) > this.time.now) damage *= 3;
         if (!isPlayer && (this.enemySunBuffUntil || 0) > this.time.now) damage *= 3;
-        if ((ctx.unit.id === 'bastin' || ctx.unit.originalId === 'bastin') && (ctx.unit.damageBuffUntil || 0) > this.time.now) damage *= 2;
-        if (Math.random() < 0.10 && (ctx.unit.id === 'er1ze' || ctx.unit.originalId === 'er1ze')) damage += 6000;
         target.currentHp -= damage;
         if (target.currentHp <= 0) {
           target.isAlive = false; target.currentHp = 0;
@@ -637,16 +555,9 @@ export class BattleScene extends Phaser.Scene {
       let damage = ctx.unit.atk * 2;
       if (isPlayer && (this.sunBuffUntil || 0) > this.time.now) damage *= 3;
       if (!isPlayer && (this.enemySunBuffUntil || 0) > this.time.now) damage *= 3;
-      if ((ctx.unit.id === 'bastin' || ctx.unit.originalId === 'bastin') && (ctx.unit.damageBuffUntil || 0) > this.time.now) damage *= 2;
-      if (Math.random() < 0.10 && (ctx.unit.id === 'er1ze' || ctx.unit.originalId === 'er1ze')) damage += 6000;
       target.currentHp -= damage; softFlash(targetSprite);
-      if ((ctx.unit.id === 'vampire' || ctx.unit.originalId === 'vampire') && Math.random() < 0.5) {
-        ctx.unit.currentHp = Math.min(ctx.unit.hp, (ctx.unit.currentHp || 0) + Math.floor(ctx.unit.hp * 0.2));
-        const selfHpBar = isPlayer ? this.playerHpBars[ctx.index] : this.enemyHpBars[ctx.index];
-        selfHpBar?.set?.(ctx.unit.currentHp / ctx.unit.hp);
-      }
       if (target.currentHp <= 0) {
-        target.isAlive = false; target.currentHp = 0; anyKilled = true;
+        target.isAlive = false; target.currentHp = 0;
         const sprite = sprites[j];
         if (sprite) this.tweens.add({ targets: sprite, alpha: 0, scale: 0.7, duration: 220, ease: 'Sine.easeIn', onComplete: () => { try { if (sprite && sprite.scene) sprite.setVisible(false); } catch (e) {} } });
         hpBars[j]?.set?.(0);
@@ -725,15 +636,6 @@ export class BattleScene extends Phaser.Scene {
         if (isPlayer && target?.originalId === 'bastin' && (target.invulnUntil || 0) > this.time.now) {
           return; // damage ignored
         }
-        // Shadow: cannot be targeted unless all other player units are dead
-        if (!isPlayer && (target?.id === 'shadow') ) {
-          const othersAlive = this.playerTeam.some((u, idx) => idx !== targetIndex && u && u.isAlive);
-          if (othersAlive) return;
-        }
-        if (isPlayer && target?.originalId === 'shadow') {
-          const othersAlive = this.enemyTeam.some((u, idx) => idx !== targetIndex && u && u.isAlive);
-          if (othersAlive) return;
-        }
         // Beach boss special attack: damage 2 random targets
         if (!isPlayer && unit.id === 'bossBeach') {
           this._beachBossAttack(unit, opp, sprites, hpBars, selfSprites, startIndex);
@@ -743,8 +645,6 @@ export class BattleScene extends Phaser.Scene {
         let damage = unit.atk;
         if (isPlayer && (this.sunBuffUntil || 0) > this.time.now) damage *= 3;
         if (!isPlayer && (this.enemySunBuffUntil || 0) > this.time.now) damage *= 3;
-        if ((unit.id === 'bastin' || unit.originalId === 'bastin') && (unit.damageBuffUntil || 0) > this.time.now) damage *= 2;
-        if (Math.random() < 0.10 && (unit.id === 'er1ze' || unit.originalId === 'er1ze')) damage += 6000;
         target.currentHp -= damage;
         // attack animation: slight nudge
         const attacker = selfSprites[startIndex];
@@ -787,8 +687,6 @@ export class BattleScene extends Phaser.Scene {
           // Imitator benefits from enemy sun buff instead of player sun buff
           if (isPlayer && (this.sunBuffUntil || 0) > this.time.now) damage *= 3;
           if (!isPlayer && (this.enemySunBuffUntil || 0) > this.time.now) damage *= 3;
-          if ((unit.id === 'bastin' || unit.originalId === 'bastin') && (unit.damageBuffUntil || 0) > this.time.now) damage *= 2;
-          if (Math.random() < 0.10 && (unit.id === 'er1ze' || unit.originalId === 'er1ze')) damage += 6000;
           target.currentHp -= damage;
           // star burst from attacker position towards target
           const attackerSprite = selfSprites[startIndex];
@@ -837,8 +735,6 @@ export class BattleScene extends Phaser.Scene {
               let damage = unit.atk * 3;
               if (isPlayer && (this.sunBuffUntil || 0) > this.time.now) damage *= 3;
               if (!isPlayer && (this.enemySunBuffUntil || 0) > this.time.now) damage *= 3;
-              if ((unit.id === 'bastin' || unit.originalId === 'bastin') && (unit.damageBuffUntil || 0) > this.time.now) damage *= 2;
-              if (Math.random() < 0.10 && (unit.id === 'er1ze' || unit.originalId === 'er1ze')) damage += 6000;
               target.currentHp -= damage;
               if (target.currentHp <= 0) {
                 target.isAlive = false; target.currentHp = 0;
@@ -873,14 +769,8 @@ export class BattleScene extends Phaser.Scene {
             let damage = unit.atk * 2;
             if (isPlayer && (this.sunBuffUntil || 0) > this.time.now) damage *= 3;
             if (!isPlayer && (this.enemySunBuffUntil || 0) > this.time.now) damage *= 3;
-            if ((ctx.unit.id === 'bastin' || ctx.unit.originalId === 'bastin') && (ctx.unit.damageBuffUntil || 0) > this.time.now) damage *= 2;
-            if (Math.random() < 0.10 && (ctx.unit.id === 'er1ze' || ctx.unit.originalId === 'er1ze')) damage += 6000;
-            target.currentHp -= damage; softFlash(targetSprite);
-            if ((ctx.unit.id === 'vampire' || ctx.unit.originalId === 'vampire') && Math.random() < 0.5) {
-              ctx.unit.currentHp = Math.min(ctx.unit.hp, (ctx.unit.currentHp || 0) + Math.floor(ctx.unit.hp * 0.2));
-              const selfHpBar = isPlayer ? this.playerHpBars[ctx.index] : this.enemyHpBars[ctx.index];
-              selfHpBar?.set?.(ctx.unit.currentHp / ctx.unit.hp);
-            }
+            target.currentHp -= damage;
+            softFlash(targetSprite);
             if (target.currentHp <= 0) {
               target.isAlive = false; target.currentHp = 0; anyKilled = true;
               const sprite = sprites[j];
@@ -1114,9 +1004,6 @@ export class BattleScene extends Phaser.Scene {
       
       let damage = unit.atk;
       if ((this.enemySunBuffUntil || 0) > this.time.now) damage *= 3;
-      // Bastin's personal damage buff should apply when Bastin is the attacker, not the target
-      if ((unit.id === 'bastin' || unit.originalId === 'bastin') && (unit.damageBuffUntil || 0) > this.time.now) damage *= 2;
-      if (Math.random() < 0.10 && (unit.id === 'er1ze' || unit.originalId === 'er1ze')) damage += 6000;
       target.currentHp -= damage;
       
       // Visual feedback

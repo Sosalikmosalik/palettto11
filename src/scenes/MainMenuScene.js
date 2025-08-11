@@ -30,17 +30,6 @@ export class MainMenuScene extends Phaser.Scene {
     this.tweens.add({ targets: [donateBg, donateIcon], scale: { from: 1, to: 1.08 }, yoyo: true, duration: 1100, ease: 'Sine.easeInOut', repeat: -1 });
     y += gap;
     const summonBtn = this._animButton(makeTextButton(this, width/2, y, btnW, btnH, 'Призыв', () => this.scene.start('Summon')));
-    // Void summon square button to the left
-    const voidBg = this.add.rectangle(width/2 - btnW/2 - 70, y, 68, 68, 0x131d2d, 0.95).setStrokeStyle(3, 0x8a7aff).setOrigin(0.5).setInteractive({ useHandCursor: true });
-    const voidIcon = this.add.image(voidBg.x, voidBg.y, 'void-hole').setDisplaySize(38, 38).setAlpha(0.95);
-    // sucking effect: slow rotation and pulsing scale
-    this.tweens.add({ targets: voidIcon, angle: 360, duration: 3000, repeat: -1, ease: 'Linear' });
-    this.tweens.add({ targets: [voidBg, voidIcon], scale: { from: 1, to: 1.08 }, yoyo: true, duration: 1400, ease: 'Sine.easeInOut', repeat: -1 });
-    voidBg.on('pointerdown', () => voidBg.setFillStyle(0x1a2740, 1)).on('pointerup', () => { voidBg.setFillStyle(0x131d2d, 0.95); this.scene.start('VoidSummon'); }).on('pointerout', () => voidBg.setFillStyle(0x131d2d, 0.95));
-    // Label and counter
-    this.add.text(voidBg.x + 52, voidBg.y - 18, 'Призыв (Пустотный свиток)', { fontSize: 16, color: '#e9f1ff' }).setOrigin(0,0.5);
-    const voidCnt = this.add.text(voidBg.x, voidBg.y + 48, `x${formatStat(window.PathHeroesState.data.voidScrolls||0)}`, { fontSize: 16, color: '#a8c3e6' }).setOrigin(0.5,0.5);
-    this._voidCountText = voidCnt;
     // star summon square button to the right
     const starBtnBg = this.add.rectangle(width/2 + btnW/2 + 70, y, 68, 68, 0x19324d, 0.95).setStrokeStyle(3, 0xffd54f).setOrigin(0.5).setInteractive({ useHandCursor: true });
     const starIcon = this.add.image(starBtnBg.x, starBtnBg.y, 'star').setDisplaySize(38, 38);
@@ -72,9 +61,8 @@ export class MainMenuScene extends Phaser.Scene {
 
   refreshResources() {
     const s = window.PathHeroesState.data;
-    this.scrollText.setText(`Свитки: ${formatStat(s.scrolls)}  |  Звёздные: ${formatStat(s.starScrolls)}  |  Пустотные: ${formatStat(s.voidScrolls||0)}`);
+    this.scrollText.setText(`Свитки: ${formatStat(s.scrolls)}  |  Звёздные: ${formatStat(s.starScrolls)}`);
     this.stoneText.setText(`Камни жизни: ${formatStat(s.lifeStones)}`);
-    if (this._voidCountText) this._voidCountText.setText(`x${formatStat(s.voidScrolls||0)}`);
   }
 }
 

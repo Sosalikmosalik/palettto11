@@ -11,6 +11,7 @@ import { AchievementsScene } from './scenes/AchievementsScene.js';
 import { PrepareScene } from './scenes/PrepareScene.js';
 import { BattleScene } from './scenes/BattleScene.js';
 import { StarSummonScene } from './scenes/StarSummonScene.js';
+import { VoidSummonScene } from './scenes/VoidSummonScene.js';
 import { State } from './state.js';
 
 // Global single state instance (autosaves internally)
@@ -36,6 +37,7 @@ const config = {
     ExtendedMapScene,
     SummonScene,
     StarSummonScene,
+    VoidSummonScene,
     InventoryScene,
     SettingsScene,
     DonationScene,

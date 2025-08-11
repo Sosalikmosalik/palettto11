@@ -12,6 +12,13 @@ export const CHARACTERS = {
   geomis: { id: 'geomis', name: 'Геомис', cls: 'маг', faction: 'mage', hp: 2890, atk: 700, atkSpeed: 1, chance: 0, sprite: 'geomis' },
   anubis: { id: 'anubis', name: 'Анубис', cls: 'бог', faction: 'god', hp: 4350, atk: 350, atkSpeed: 3, chance: 0, sprite: 'anubis' },
   starlord: { id: 'starlord', name: 'Star Lord', cls: 'космос', faction: 'cosmos', hp: 7800, atk: 1500, atkSpeed: 1, chance: 0, sprite: 'starlord' },
+  // Void heroes (Пустота)
+  bruno: { id: 'bruno', name: 'Бруно', cls: 'пастор', faction: 'support', hp: 9000, atk: 500, atkSpeed: 1, chance: 30, sprite: 'bruno' },
+  shadow: { id: 'shadow', name: 'Тень', cls: 'тень', faction: 'melee', hp: 10000, atk: 450, atkSpeed: 1, chance: 30, sprite: 'shadow' },
+  x: { id: 'x', name: 'Х', cls: 'маг', faction: 'mage', hp: 11000, atk: 700, atkSpeed: 2, chance: 20, sprite: 'x' },
+  vampire: { id: 'vampire', name: 'Вампир', cls: 'нежить', faction: 'undead', hp: 15000, atk: 1500, atkSpeed: 1, chance: 10, sprite: 'vampire' },
+  er1ze: { id: 'er1ze', name: 'Er1ze', cls: 'робот', faction: 'robot', hp: 12000, atk: 1000, atkSpeed: 1, chance: 7, sprite: 'er1ze' },
+  zeus: { id: 'zeus', name: 'Зевс', cls: 'бог', faction: 'god', hp: 25000, atk: 1500, atkSpeed: 2, chance: 3, sprite: 'zeus' },
 };
 
 export const CHARACTER_ORDER = ['executioner','elder','r9','assassin','fobos','lord','bastin','geomis','anubis','starlord'];
@@ -25,6 +32,17 @@ export const STAR_SUMMON_CHANCES = {
   geomis: 10,
   anubis: 7,
   starlord: 3,
+};
+
+// Void summon pool (Пустотный призыв)
+export const VOID_SUMMON_ORDER = ['bruno','shadow','x','vampire','er1ze','zeus'];
+export const VOID_SUMMON_CHANCES = {
+  bruno: 30,
+  shadow: 30,
+  x: 20,
+  vampire: 10,
+  er1ze: 7,
+  zeus: 3,
 };
 
 export function cloneDeep(obj) {
